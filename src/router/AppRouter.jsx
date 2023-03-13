@@ -3,7 +3,7 @@ import { AuthRoutes } from "../auth/routes";
 import { TodoRoutes } from "../todo/routes";
 
 export const AppRouter = () => {
-  const status = "not-authentica";
+  const status = "not-authenticated";
 
   return (
     <Routes>
