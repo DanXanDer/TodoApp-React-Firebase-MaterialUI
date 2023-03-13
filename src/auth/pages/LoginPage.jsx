@@ -1,22 +1,40 @@
 import { Facebook, Google } from "@mui/icons-material";
-import {
-  Button,
-  Divider,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
 import React from "react";
+import { useForm } from "../../hooks";
 import { AuthLayout } from "../Layout";
 
+const loginForm = {
+  email: "",
+  password: "",
+};
+
 export const LoginPage = () => {
-  
+
+  const { email, password, handleInputChange } = useForm(loginForm);
+
   return (
     <AuthLayout page="login">
-     
       <Grid container mb={2}>
-        <TextField label="Email" fullWidth variant="outlined" sx={{ mb: 2 }} />
-        <TextField label="Password" fullWidth variant="outlined" />
+        <TextField
+          name="email"
+          value={email}
+          onChange={handleInputChange}
+          type="email"
+          label="Email"
+          fullWidth
+          variant="outlined"
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          name="password"
+          value={password}
+          type="password"
+          onChange={handleInputChange}
+          label="Password"
+          fullWidth
+          variant="outlined"
+        />
       </Grid>
       <Grid container mb={2}>
         <Button
