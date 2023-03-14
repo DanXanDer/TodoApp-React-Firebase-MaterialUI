@@ -1,21 +1,19 @@
-import { Image } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Divider,
-  Grid,
-} from "@mui/material";
+import { Box, Button, ButtonGroup, Divider, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useUiStore } from "../../hooks";
 
 export const AuthLayout = ({ children, page = "" }) => {
+  const { submitted, changeSubmitStatus } = useUiStore();
+
   const navigate = useNavigate();
 
   const handleGoToRegisterPage = () => {
+    if (submitted === true) changeSubmitStatus(false);
     navigate("/auth/register");
   };
 
   const handleGoToLoginPage = () => {
+    if (submitted === true) changeSubmitStatus(false);
     navigate("/auth/login");
   };
 
@@ -23,11 +21,12 @@ export const AuthLayout = ({ children, page = "" }) => {
     <Box
       sx={{
         width: "100vw",
-        height: "100vh",
+        minHeight: "100vh",
         display: "flex",
         backgroundColor: "primary.main",
         justifyContent: "center",
         alignItems: "center",
+        padding: 2,
       }}
     >
       <Grid
@@ -71,7 +70,7 @@ export const AuthLayout = ({ children, page = "" }) => {
         </Grid>
         <Box
           sx={{
-            height: 80,
+            height: 100,
             width: "100%",
             display: "flex",
             justifyContent: "center",

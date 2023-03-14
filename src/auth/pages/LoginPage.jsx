@@ -11,7 +11,7 @@ const loginForm = {
 
 export const LoginPage = () => {
 
-  const { email, password, handleInputChange } = useForm(loginForm);
+  const { email, password, handleInputChange } = useForm(loginForm,{});
 
   return (
     <AuthLayout page="login">
@@ -50,7 +50,7 @@ export const LoginPage = () => {
       </Grid>
       <Divider sx={{ width: "100%" }}>Or</Divider>
       <Grid container mt={2}>
-        <Button variant="outlined" fullWidth>
+        <Button variant="outlined" fullWidth sx={{backgroundColor: 'white', color: 'gray'}} >
           <Google sx={{ mr: 1 }} />
           <Typography>Continue with Google</Typography>
         </Button>
