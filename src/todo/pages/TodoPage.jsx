@@ -1,5 +1,13 @@
+import { Box } from "@mui/material";
+import { NavBar, SideBar } from "../components";
+
+const drawerWidth = 240;
+
 export const TodoPage = () => {
   return (
-    <div>TodoPage</div>
-  )
-}
+    <Box sx={{ display: "flex" }}>
+      <NavBar drawerWidth={drawerWidth} />
+      <SideBar drawerWidth={drawerWidth} />
+    </Box>
+  );
+};
