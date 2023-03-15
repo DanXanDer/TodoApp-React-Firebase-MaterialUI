@@ -6,6 +6,7 @@ export const uiSlice = createSlice({
     submitted: false,
     checking: false,
     mobileOpen: false,
+    navbarHeight: '',
   },
   reducers: {
     onChangeSubmitStatus: (state, action) => {
@@ -17,7 +18,10 @@ export const uiSlice = createSlice({
     onChangeMobileOpenStatus: (state, action) => {
       state.mobileOpen = action.payload;
     },
+    onChangeNavbarHeight: (state, action) => {
+      state.navbarHeight = action.payload;
+    },
   },
 });
 
-export const { onChangeSubmitStatus, onChangeCheckingStatus, onChangeMobileOpenStatus } = uiSlice.actions;
+export const { onChangeSubmitStatus, onChangeCheckingStatus, onChangeMobileOpenStatus, onChangeNavbarHeight } = uiSlice.actions;

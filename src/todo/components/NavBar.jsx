@@ -1,25 +1,14 @@
-import {
-  AccountCircle,
-  Logout,
-  Mail,
-  MenuOpen,
-  MoreVert,
-  Notifications,
-  SearchOutlined,
-} from "@mui/icons-material";
+import { Logout, MenuOpen, SearchOutlined } from "@mui/icons-material";
 import {
   AppBar,
-  Badge,
   Box,
   IconButton,
   InputBase,
   Toolbar,
   Typography,
-  Menu,
-  MenuItem,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
-import { useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useUiStore } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
@@ -69,7 +58,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const NavBar = ({ drawerWidth }) => {
-  const { mobileOpen, changeMobileOpenStatus } = useUiStore();
+  const {
+    mobileOpen,
+    changeMobileOpenStatus,
+    changeNavbarHeight,
+  } = useUiStore();
+
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    
+    const actualizeNavHeight = () => {
+      changeNavbarHeight(navRef.current.offsetHeight);
+    }
+    
+    actualizeNavHeight();
+
+    window.addEventListener("resize", actualizeNavHeight);
+
+    return () => {
+      window.removeEventListener("resize", actualizeNavHeight);
+    };
+  }, []);
 
   const handleDrawerToggle = () => {
     changeMobileOpenStatus(!mobileOpen);
@@ -82,8 +92,9 @@ export const NavBar = ({ drawerWidth }) => {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          backgroundColor: "primary.dark"
+          backgroundColor: "primary.dark",
         }}
+        ref={navRef}
       >
         <Toolbar>
           <IconButton
@@ -113,15 +124,10 @@ export const NavBar = ({ drawerWidth }) => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "flex" } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              color="inherit"
-            >
+            <IconButton size="large" edge="end" color="inherit">
               <Logout />
             </IconButton>
           </Box>
-         
         </Toolbar>
       </AppBar>
     </>
