@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useForm, useUiStore } from "../../hooks";
+import { useUiStore } from "../../hooks";
 import { useState } from "react";
 
 const priorities = [
@@ -73,29 +73,26 @@ export const AddTodo = () => {
     });
   };
 
-  // const {
-  //   title,
-  //   startDate,
-  //   endDate,
-  //   priority,
-  //   handleInputChange,
-  //   handleFormReset,
-  // } = useForm(newTodoForm);
+  const handleAddNewTodo = (event) => {
+    event.preventDefault();
+    const daysDifference = differenceInDays(endDate, startDate);
+    console.log(daysDifference);
+  };
 
   return (
-    <div>
-      <Modal
-        open={modalOpen}
-        onClose={closeModal}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={modalOpen}>
+    <Modal
+      open={modalOpen}
+      onClose={closeModal}
+      closeAfterTransition
+      slots={{ backdrop: Backdrop }}
+      slotProps={{
+        backdrop: {
+          timeout: 500,
+        },
+      }}
+    >
+      <Fade in={modalOpen}>
+        <form onSubmit={handleAddNewTodo}>
           <Box sx={style}>
             <Grid container gap={3}>
               <Grid item xs={12}>
@@ -103,6 +100,7 @@ export const AddTodo = () => {
                   Add new todo
                 </Typography>
               </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -115,6 +113,8 @@ export const AddTodo = () => {
               </Grid>
               <Grid item xs={12}>
                 <DatePicker
+                  maxDate={endDate}
+                  disablePast
                   name="startDate"
                   value={startDate}
                   onChange={(newValue) => handleDateChange(newValue, start)}
@@ -126,6 +126,8 @@ export const AddTodo = () => {
               </Grid>
               <Grid item xs={12}>
                 <DatePicker
+                  minDate={startDate}
+                  disablePast
                   name="endDate"
                   value={endDate}
                   onChange={(newValue) => handleDateChange(newValue, end)}
@@ -153,14 +155,19 @@ export const AddTodo = () => {
                 </TextField>
               </Grid>
               <Grid item xs={6} sx={{ margin: "0 auto" }}>
-                <Button fullWidth variant="contained" startIcon={<Save />}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  startIcon={<Save />}
+                >
                   Add todo
                 </Button>
               </Grid>
             </Grid>
           </Box>
-        </Fade>
-      </Modal>
-    </div>
+        </form>
+      </Fade>
+    </Modal>
   );
 };
