@@ -19,6 +19,7 @@
     "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-modal": "^3.16.1",
     "react-password-checklist": "^1.4.3",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
@@ -28,6 +29,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
+    "prettier-plugin-organize-imports": "^3.2.2",
     "vite": "^4.1.0"
   }
 }

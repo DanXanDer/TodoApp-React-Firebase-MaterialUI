@@ -2,7 +2,8 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useMemo, useState } from "react";
 import ReactPasswordChecklist from "react-password-checklist";
 import swal from "sweetalert";
-import { useForm, useUiStore } from "../../hooks";
+import { useAuthStore, useForm } from "../../hooks";
+import { ErrorMessage, PasswordInput } from "../components";
 import { AuthLayout } from "../Layout";
 
 const registerForm = {
@@ -31,24 +32,34 @@ export const RegisterPage = () => {
     emailValidation,
     userValidation,
     formValid,
+    formState,
     handleInputChange,
+    handleFormReset,
   } = useForm(registerForm, formErrors);
 
   const [passwordValid, setPasswordValid] = useState(true);
 
-  const { submitted, checking, changeSubmitStatus } = useUiStore();
+  const { submitted, startRegister, changeSubmitStatus, errorMsg } =
+    useAuthStore();
 
   const handleCheckForm = () => {
     setPasswordValid(!passwordValid);
   };
 
-  const handleSubmitForm = (event) => {
+  const handleSubmitForm = async (event) => {
     event.preventDefault();
     changeSubmitStatus(true);
     if (!passwordValid || !formValid) {
       swal("Invalid register", "Try again", "error");
     } else {
-      swal("Account created", "You can login now", "success");
+      await startRegister(formState);
+      if (errorMsg === undefined) {
+        swal("Account created", "You can login now", "success");
+        handleFormReset();
+        changeSubmitStatus(false);
+      } else {
+        swal("Invalid register", "Email already exists", "error");
+      }
     }
   };
 
@@ -87,25 +98,19 @@ export const RegisterPage = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              name="password"
-              value={password}
-              onChange={handleInputChange}
-              type="password"
+            <PasswordInput
               label="Password"
-              fullWidth
-              variant="outlined"
+              inputName="password"
+              passwordValue={password}
+              handleInputChange={handleInputChange}
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              name="passwordAgain"
-              value={passwordAgain}
-              onChange={handleInputChange}
-              type="password"
-              label="Confirm password"
-              fullWidth
-              variant="outlined"
+            <PasswordInput
+              label="Confirm"
+              inputName="passwordAgain"
+              passwordValue={passwordAgain}
+              handleInputChange={handleInputChange}
             />
           </Grid>
         </Grid>
@@ -125,6 +130,7 @@ export const RegisterPage = () => {
             }}
           />
         </Grid>
+        <ErrorMessage />
         <Grid container mb={2}>
           <Button
             type="submit"

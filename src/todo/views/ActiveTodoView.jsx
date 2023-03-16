@@ -1,14 +1,5 @@
-import { AddCircle, Delete, Save } from "@mui/icons-material";
-import {
-  Button,
-  Grid,
-  Icon,
-  IconButton,
-  TextField,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { Delete, Save } from "@mui/icons-material";
+import { Button, Grid, TextField, Toolbar, Typography } from "@mui/material";
 
 export const ActiveTodoView = ({ excessHeight }) => {
   return (
@@ -29,49 +20,17 @@ export const ActiveTodoView = ({ excessHeight }) => {
       >
         <Grid item>
           <form>
-            <Grid mb={5} container sx={{ justifyContent: "end" }}>
-              <Button variant="contained" startIcon={<Save />}>
-                Save task
-              </Button>
-            </Grid>
             <Grid
               container
-              sx={{
-                flexDirection: { xs: "column", lg: "row" },
-                justifyContent: {lg: "space-between"},
-                gap: 2,
-              }}
-              
+              sx={{ justifyContent: "space-between" }}
             >
-              <Grid item xs={12} lg={5.7}>
-                <TextField fullWidth label="Task name" variant="standard" />
+              <Grid item xs={6.5} md={9.5}>
+                <TextField fullWidth label="Task description" variant="standard" />
               </Grid>
-              <Grid item xs={12} lg={5.7}>
-                <Grid
-                  container
-                  sx={{
-                    flexDirection: { xs: "column", lg: "row" },
-                    justifyContent: { lg: "space-between" },
-                    gap: 2,
-                  }}
-                >
-                  <Grid item xs={12} lg={5.7} >
-                    <DatePicker
-                      label="Start date"
-                      sx={{
-                        width: "100%",
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} lg={5.7} >
-                    <DatePicker
-                      label="End date"
-                      sx={{
-                        width: "100%",
-                      }}
-                    />
-                  </Grid>
-                </Grid>
+              <Grid item xs={4.5} md={2} sx={{alignSelf: "end"}} >
+                <Button fullWidth variant="contained" startIcon={<Save />}>
+                  Save
+                </Button>
               </Grid>
             </Grid>
           </form>

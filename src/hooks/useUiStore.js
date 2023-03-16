@@ -1,34 +1,43 @@
 import { useDispatch, useSelector } from "react-redux";
-import { onChangeMobileOpenStatus, onChangeSubmitStatus, onChangeNavbarHeight } from "../store/ui";
+import {
+  onChangeMobileOpenStatus,
+  onChangeNavbarHeight,
+  onCloseModal,
+  onOpenModal,
+} from "../store/ui";
 
 export const useUiStore = () => {
   const dispatch = useDispatch();
-  const { submitted, checking, mobileOpen, navbarHeight } = useSelector(
+  const { mobileOpen, navbarHeight, modalOpen } = useSelector(
     (state) => state.uiSlice
   );
-
-  const changeSubmitStatus = (value) => {
-    dispatch(onChangeSubmitStatus(value));
-  };
 
   const changeMobileOpenStatus = (mobileOpenStatus) => {
     dispatch(onChangeMobileOpenStatus(mobileOpenStatus));
   };
 
   const changeNavbarHeight = (navbarHeight) => {
-    dispatch(onChangeNavbarHeight(navbarHeight))
-  }
+    dispatch(onChangeNavbarHeight(navbarHeight));
+  };
+
+  const closeModal = () => {
+    dispatch(onCloseModal());
+  };
+
+  const openModal = () => {
+    dispatch(onOpenModal());
+  };
 
   return {
     //Properties
-    submitted,
-    checking,
     mobileOpen,
     navbarHeight,
+    modalOpen,
 
     //Methods
-    changeSubmitStatus,
     changeMobileOpenStatus,
-    changeNavbarHeight
+    changeNavbarHeight,
+    closeModal,
+    openModal,
   };
 };

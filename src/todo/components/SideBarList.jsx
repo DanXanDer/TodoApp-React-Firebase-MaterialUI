@@ -13,7 +13,12 @@ import {
 import { useUiStore } from "../../hooks";
 
 export const SideBarList = () => {
-  const { navbarHeight } = useUiStore();
+
+  const { navbarHeight, openModal } = useUiStore();
+
+  const handleOpenModal = () => {
+    openModal();
+  }
 
   return (
     <div>
@@ -25,8 +30,14 @@ export const SideBarList = () => {
           alignItems: "center",
         }}
       >
-        <Grid item xs={12} p={1} >
-          <Button fullWidth variant="contained" color="success" startIcon={<Add />}>
+        <Grid item xs={12} p={1}>
+          <Button
+            onClick={handleOpenModal}
+            fullWidth
+            variant="contained"
+            color="success"
+            startIcon={<Add />}
+          >
             Add new todo
           </Button>
         </Grid>

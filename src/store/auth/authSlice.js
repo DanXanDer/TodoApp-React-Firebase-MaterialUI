@@ -1,16 +1,60 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const authSlice = createSlice({
-  name: 'authSlice',
+  name: "authSlice",
   initialState: {
-    
+    status: "not-authenticated",
+    todos: [],
+    user: {
+      uid: "",
+      name: "",
+      email: "",
+    },
+    submitted: false,
+    checkingForm: false,
+    errorMsg: undefined,
   },
   reducers: {
-    reducer1: (state) => {
-      state.property += 1
-    }
-  }
+    onLogin: (state, action) => {
+      (state.status = "authenticated"), (state.user.uid = action.payload.uid);
+      state.user.name = action.payload.name;
+      state.user.email = action.payload.email;
+      state.submitted = false;
+      state.checkingForm = false;
+    },
+    onLogout: (state) => {
+      state.status = "not-authenticated";
+      state.todos = [];
+      state.user = {
+        id: "",
+        name: "",
+        email: "",
+      };
+    },
+    onCheckingAuth: (state) => {
+      state.status = "checking";
+    },
+    onChangeSubmitStatus: (state, action) => {
+      state.submitted = action.payload; // true or false
+    },
+    onCheckingForm: (state, action) => {
+      state.checkingForm = action.payload; //true or false
+    },
+    onErrorMsg: (state, action) => {
+      if ((action.payload === "")) {
+        state.errorMsg = undefined;
+      } else {
+        state.errorMsg = action.payload;
+      }
+    },
+  },
 });
 
-export const { reducer } = authSlice.actions;
-export default authSlice.reducer;
+export const {
+  onCheckingForm,
+  onChangeSubmitStatus,
+  onLogin,
+  onLogout,
+  onErrorMsg,
+  onCheckingAuth
+} = authSlice.actions;

@@ -1,19 +1,25 @@
 import { Box, Button, ButtonGroup, Divider, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useUiStore } from "../../hooks";
+import { useAuthStore } from "../../hooks";
 
 export const AuthLayout = ({ children, page = "" }) => {
-  const { submitted, changeSubmitStatus } = useUiStore();
+  const { submitted, changeSubmitStatus, cleanErrorMsg } = useAuthStore();
 
   const navigate = useNavigate();
 
   const handleGoToRegisterPage = () => {
-    if (submitted === true) changeSubmitStatus(false);
+    if (submitted === true) {
+      changeSubmitStatus(false);
+      cleanErrorMsg();
+    }
     navigate("/auth/register");
   };
 
   const handleGoToLoginPage = () => {
-    if (submitted === true) changeSubmitStatus(false);
+    if (submitted === true) {
+      changeSubmitStatus(false);
+      cleanErrorMsg();
+    }
     navigate("/auth/login");
   };
 
