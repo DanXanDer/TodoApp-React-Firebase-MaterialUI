@@ -26,8 +26,6 @@ export const muiTheme = createTheme({
       textTransform: "none",
       fontSize: "16px",
     },
-    IconButton: {
-      fontSize: "48px"
-    }
+    
   },
 });

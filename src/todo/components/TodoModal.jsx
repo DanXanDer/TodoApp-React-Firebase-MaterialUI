@@ -12,8 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import { useUiStore } from "../../hooks";
-import { useState } from "react";
+import { useForm, useTodoStore, useUiStore } from "../../hooks";
+import { useEffect, useMemo, useState } from "react";
+import swal from "sweetalert";
+import { LoadingButton } from "@mui/lab";
 
 const priorities = [
   {
@@ -45,44 +47,91 @@ const style = {
 const start = "startDate";
 const end = "endDate";
 
-export const AddTodo = () => {
+const cleanedForm = {
+  title: "",
+  startDate: new Date(),
+  endDate: addDays(new Date(), 1),
+  priority: "",
+};
+
+export const TodoModal = () => {
+  const [initialForm, setInitialForm] = useState(cleanedForm);
+  
+  const [saving, setSaving] = useState(false);
+
   const { closeModal, modalOpen } = useUiStore();
 
-  const [formValues, setFormValues] = useState({
-    title: "",
-    startDate: new Date(),
-    endDate: addDays(new Date(), 1),
-    priority: "",
-  });
+  const { startAddNewTodo, todoEdit, setEditTodo, startEditTodo } =
+    useTodoStore();
 
-  const { title, startDate, endDate, priority } = formValues;
+  const modalTitle = useMemo(() => {
+    return todoEdit === null ? "Add new todo" : "Edit todo";
+  }, [modalOpen]);
 
-  const handleInputChange = ({ target }) => {
-    const name = target.name;
-    const value = target.value;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
 
-  const handleDateChange = (newValue, dateName) => {
-    setFormValues({
-      ...formValues,
-      [dateName]: newValue,
-    });
-  };
+  useEffect(() => {
+    if (todoEdit !== null) {
+      console.log("gaa")
+      setInitialForm({...todoEdit});
+    }
+  }, [modalOpen]);
 
-  const handleAddNewTodo = (event) => {
+  const {
+    title,
+    priority,
+    startDate,
+    endDate,
+    formState,
+    handleFormReset,
+    handleDateChange,
+    handleInputChange,
+    handleCheckEmptyForm,
+  } = useForm({ initialForm });
+
+  
+
+
+  const handleTodoSubmit = async (event) => {
     event.preventDefault();
-    const daysDifference = differenceInDays(endDate, startDate);
-    console.log(daysDifference);
+    if (handleCheckEmptyForm()) {
+      swal("ToDo add failed", "Don't leave empty fields!", "error");
+    } else {
+      if (todoEdit === null) {
+        setSaving(true);
+        const { ok } = await startAddNewTodo(formState);
+        setSaving(false);
+        if (ok) {
+          swal("New ToDo add!", "Add tasks to your new ToDo", "success");
+          handleFormReset(cleanedForm);
+          handleCloseModal();
+        } else {
+          swal("ToDo add failed", "Try again", "error");
+        }
+      } else {
+        setSaving(true);
+        const { ok } = await startEditTodo(formState);
+        setSaving(false);
+        if (ok) {
+          swal("ToDo edited!", "ToDo has been edited correctly", "success");
+          handleFormReset(cleanedForm);
+          handleCloseModal();
+        } else {
+          swal("ToDo edit failed", "Try again", "error");
+        }
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+    setEditTodo(null);
+    handleFormReset(cleanedForm);
   };
 
   return (
     <Modal
       open={modalOpen}
-      onClose={closeModal}
+      onClose={handleCloseModal}
       closeAfterTransition
       slots={{ backdrop: Backdrop }}
       slotProps={{
@@ -92,12 +141,12 @@ export const AddTodo = () => {
       }}
     >
       <Fade in={modalOpen}>
-        <form onSubmit={handleAddNewTodo}>
+        <form onSubmit={handleTodoSubmit}>
           <Box sx={style}>
             <Grid container gap={3}>
               <Grid item xs={12}>
                 <Typography variant="h5" textAlign="center">
-                  Add new todo
+                  {modalTitle}
                 </Typography>
               </Grid>
 
@@ -145,7 +194,6 @@ export const AddTodo = () => {
                   onChange={handleInputChange}
                   select
                   label="Priority"
-                  defaultValue="Normal"
                 >
                   {priorities.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -155,14 +203,16 @@ export const AddTodo = () => {
                 </TextField>
               </Grid>
               <Grid item xs={6} sx={{ margin: "0 auto" }}>
-                <Button
+                <LoadingButton
                   type="submit"
                   fullWidth
-                  variant="contained"
+                  loading={saving}
+                  loadingPosition="start"
                   startIcon={<Save />}
+                  variant="contained"
                 >
-                  Add todo
-                </Button>
+                  Save
+                </LoadingButton>
               </Grid>
             </Grid>
           </Box>

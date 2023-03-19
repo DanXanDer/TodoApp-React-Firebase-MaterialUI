@@ -6,15 +6,15 @@ import { useAuthStore, useForm } from "../../hooks";
 import { ErrorMessage, PasswordInput } from "../components";
 import { AuthLayout } from "../Layout";
 
-const registerForm = {
-  user: "",
+const initialForm = {
+  displayName: "",
   email: "",
   password: "",
   passwordAgain: "",
 };
 
 const formErrors = {
-  user: [
+  displayName: [
     (value = "") => {
       return value.length >= 4 ? true : false;
     },
@@ -25,22 +25,27 @@ const formErrors = {
 
 export const RegisterPage = () => {
   const {
-    user,
+    displayName,
     email,
     password,
     passwordAgain,
     emailValidation,
-    userValidation,
+    displayNameValidation,
     formValid,
     formState,
     handleInputChange,
     handleFormReset,
-  } = useForm(registerForm, formErrors);
+    handleCheckEmptyForm
+  } = useForm({initialForm, formErrors});
 
   const [passwordValid, setPasswordValid] = useState(true);
 
-  const { submitted, startRegister, changeSubmitStatus, errorMsg } =
-    useAuthStore();
+  const {
+    submitted,
+    startRegisterWithEmailAndPassword,
+    changeSubmitStatus,
+    errorMsg,
+  } = useAuthStore();
 
   const handleCheckForm = () => {
     setPasswordValid(!passwordValid);
@@ -49,11 +54,14 @@ export const RegisterPage = () => {
   const handleSubmitForm = async (event) => {
     event.preventDefault();
     changeSubmitStatus(true);
-    if (!passwordValid || !formValid) {
+    if(handleCheckEmptyForm()){
+      swal("Invalid register", "Don't leave empty fields!", "error")
+    }
+    else if (!passwordValid || !formValid) {
       swal("Invalid register", "Try again", "error");
     } else {
-      await startRegister(formState);
-      if (errorMsg === undefined) {
+      const {ok} = await startRegisterWithEmailAndPassword(formState);
+      if (ok) {
         swal("Account created", "You can login now", "success");
         handleFormReset();
         changeSubmitStatus(false);
@@ -73,11 +81,11 @@ export const RegisterPage = () => {
         <Grid container spacing={2} mb={2}>
           <Grid item xs={12}>
             <TextField
-              name="user"
-              error={submitted && !!userValidation}
+              name="displayName"
+              error={submitted && !!displayNameValidation}
               fullWidth
-              helperText={submitted && userValidation}
-              value={user}
+              helperText={submitted && displayNameValidation}
+              value={displayName}
               onChange={handleInputChange}
               type="text"
               label="User"

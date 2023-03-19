@@ -1,24 +1,15 @@
 import { Add, Inbox, Mail } from "@mui/icons-material";
-import {
-  Button,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-} from "@mui/material";
-import { useUiStore } from "../../hooks";
+import { Button, Divider, Grid, List } from "@mui/material";
+import { useTodoStore, useUiStore } from "../../hooks";
+import { SideBarItem } from "./SideBarItem";
 
 export const SideBarList = () => {
-
   const { navbarHeight, openModal } = useUiStore();
+  const { todos } = useTodoStore();
 
   const handleOpenModal = () => {
     openModal();
-  }
+  };
 
   return (
     <div>
@@ -28,45 +19,28 @@ export const SideBarList = () => {
           height: `${navbarHeight}px`,
           justifyContent: "center",
           alignItems: "center",
+         
         }}
       >
         <Grid item xs={12} p={1}>
           <Button
             onClick={handleOpenModal}
             fullWidth
-            variant="contained"
-            color="success"
+            variant="outlined"
+            color="info"
             startIcon={<Add />}
           >
-            Add new todo
+            Add todo
           </Button>
         </Grid>
       </Grid>
-      <Divider />
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <Inbox /> : <Mail />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <Inbox /> : <Mail />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+      {/* <Divider color="white" /> */}
+      <List sx={{ color: "secondary.main", padding: 0}}>
+        {
+          todos.map(todo => {
+            return <SideBarItem key={todo.id} todo={todo} />
+          })
+        }
       </List>
     </div>
   );

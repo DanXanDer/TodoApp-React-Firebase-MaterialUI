@@ -1,12 +1,14 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
-import { useUiStore } from "../../hooks";
-import { AddTodo, NavBar, SideBar } from "../components";
+import { useTodoStore, useUiStore } from "../../hooks";
+import { TodoModal, NavBar, SideBar } from "../components";
 import { ActiveTodoView, NothingSelectedView } from "../views";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 export const TodoPage = () => {
+  const { activeTodo } = useTodoStore();
+
   const { navbarHeight } = useUiStore();
 
   const excessHeight = useMemo(() => {
@@ -25,10 +27,13 @@ export const TodoPage = () => {
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        {/* <NothingSelectedView excessHeight={excessHeight} /> */}
-        <ActiveTodoView excessHeight={excessHeight} />
+        {activeTodo === null ? (
+          <NothingSelectedView excessHeight={excessHeight} />
+        ) : (
+          <ActiveTodoView excessHeight={excessHeight} />
+        )}
       </Box>
-      <AddTodo/>
+      <TodoModal />
     </Box>
   );
 };

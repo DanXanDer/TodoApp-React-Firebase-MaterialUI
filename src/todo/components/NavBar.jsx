@@ -1,4 +1,4 @@
-import { Logout, MenuOpen, SearchOutlined } from "@mui/icons-material";
+import { Logout, Menu, MenuOpen, SearchOutlined } from "@mui/icons-material";
 import {
   AppBar,
   Box,
@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { useEffect, useMemo, useRef } from "react";
-import { useUiStore } from "../../hooks";
+import { useAuthStore, useUiStore } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,20 +58,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const NavBar = ({ drawerWidth }) => {
-  const {
-    mobileOpen,
-    changeMobileOpenStatus,
-    changeNavbarHeight,
-  } = useUiStore();
+  const { mobileOpen, changeMobileOpenStatus, changeNavbarHeight } =
+    useUiStore();
+
+  const { startLogout, displayName } = useAuthStore();
 
   const navRef = useRef(null);
 
   useEffect(() => {
-    
     const actualizeNavHeight = () => {
       changeNavbarHeight(navRef.current.offsetHeight);
-    }
-    
+    };
+
     actualizeNavHeight();
 
     window.addEventListener("resize", actualizeNavHeight);
@@ -83,6 +81,11 @@ export const NavBar = ({ drawerWidth }) => {
 
   const handleDrawerToggle = () => {
     changeMobileOpenStatus(!mobileOpen);
+  };
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+    await startLogout();
   };
 
   return (
@@ -103,7 +106,7 @@ export const NavBar = ({ drawerWidth }) => {
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { sm: "none" } }}
           >
-            <MenuOpen />
+            <Menu />
           </IconButton>
           <Typography
             variant="h6"
@@ -111,7 +114,7 @@ export const NavBar = ({ drawerWidth }) => {
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            Daniel Gonzales
+            {displayName}
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -124,7 +127,12 @@ export const NavBar = ({ drawerWidth }) => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "flex" } }}>
-            <IconButton size="large" edge="end" color="inherit">
+            <IconButton
+              onClick={handleLogout}
+              size="large"
+              edge="end"
+              color="inherit"
+            >
               <Logout />
             </IconButton>
           </Box>

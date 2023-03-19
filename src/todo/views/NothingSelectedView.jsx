@@ -6,9 +6,8 @@ export const NothingSelectedView = ({ excessHeight }) => {
     <>
       <Toolbar />
       <Grid
+        container
         sx={{
-          display: "grid",
-          gridTemplate: "5fr 1fr / 1fr",
           backgroundColor: "primary.main",
           borderRadius: 5,
           p: 3,
@@ -30,12 +29,6 @@ export const NothingSelectedView = ({ excessHeight }) => {
           <Grid item>
             <Typography variant="h5">Select or add a new todo</Typography>
           </Grid>
-        </Grid>
-
-        <Grid item sx={{ justifySelf: "end", alignSelf: "center" }}>
-          <IconButton sx={{ color: "error.main" }}>
-            <AddCircle sx={{ fontSize: "70px" }} />
-          </IconButton>
         </Grid>
       </Grid>
     </>

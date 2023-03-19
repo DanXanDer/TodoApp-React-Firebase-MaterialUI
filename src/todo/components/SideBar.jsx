@@ -44,7 +44,7 @@ export const SideBar = ({ drawerWidth }) => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              backgroundColor: "white",
+              backgroundColor: "primary.main",
             },
           }}
           open

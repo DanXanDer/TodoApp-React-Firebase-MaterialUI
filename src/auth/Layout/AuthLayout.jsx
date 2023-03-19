@@ -29,7 +29,7 @@ export const AuthLayout = ({ children, page = "" }) => {
         width: "100vw",
         minHeight: "100vh",
         display: "flex",
-        backgroundColor: "primary.main",
+        background: "linear-gradient(to right, #36d1dc, #5b86e5)",
         justifyContent: "center",
         alignItems: "center",
         padding: 2,
@@ -38,10 +38,12 @@ export const AuthLayout = ({ children, page = "" }) => {
       <Grid
         container
         sx={{
-          width: 450,
-          backgroundColor: "secondary.main",
-          borderRadius: 3,
-          padding: 3,
+          width: 350,
+          backgroundColor: "white",
+          padding: "20px 25px",
+          borderRadius: 1,
+          boxShadow:
+            "0px 0px 10px 5px rgba(0,0,0,0.2),0px 10px 15px -3px rgba(0,0,0,0.1)",
         }}
       >
         <Grid container>

@@ -3,11 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 export const authSlice = createSlice({
   name: "authSlice",
   initialState: {
-    status: "not-authenticated",
+    status: "checking",
     todos: [],
     user: {
       uid: "",
-      name: "",
+      displayName: "",
       email: "",
     },
     submitted: false,
@@ -16,8 +16,9 @@ export const authSlice = createSlice({
   },
   reducers: {
     onLogin: (state, action) => {
-      (state.status = "authenticated"), (state.user.uid = action.payload.uid);
-      state.user.name = action.payload.name;
+      state.status = "authenticated";
+      state.user.uid = action.payload.uid;
+      state.user.displayName = action.payload.displayName;
       state.user.email = action.payload.email;
       state.submitted = false;
       state.checkingForm = false;
@@ -27,12 +28,15 @@ export const authSlice = createSlice({
       state.todos = [];
       state.user = {
         id: "",
-        name: "",
+        displayName: "",
         email: "",
       };
+      state.submitted = false;
+      state.checkingForm = false;
+      state.errorMsg = undefined;
     },
     onCheckingAuth: (state) => {
-      state.status = "checking";
+      state.status = "checking"; // authenticated, not-authenticated and checking
     },
     onChangeSubmitStatus: (state, action) => {
       state.submitted = action.payload; // true or false
@@ -41,7 +45,7 @@ export const authSlice = createSlice({
       state.checkingForm = action.payload; //true or false
     },
     onErrorMsg: (state, action) => {
-      if ((action.payload === "")) {
+      if (action.payload === "") {
         state.errorMsg = undefined;
       } else {
         state.errorMsg = action.payload;
@@ -56,5 +60,5 @@ export const {
   onLogin,
   onLogout,
   onErrorMsg,
-  onCheckingAuth
+  onCheckingAuth,
 } = authSlice.actions;
