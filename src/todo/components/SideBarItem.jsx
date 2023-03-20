@@ -47,8 +47,12 @@ export const SideBarItem = ({ todo }) => {
   }, [todo]);
 
   const handleSelectActiveTodo = async () => {
-    setActiveTodo(todo);
-    await startLoadingTasks(todo);
+    //TODO: Modificar para que cargue desde los arrays locales luego de que se haya cargado las tareas por primera vez desde la BD
+    if (!todo.tasks) {
+      await startLoadingTasks(todo);
+    } else {
+      setActiveTodo(todo);
+    }
   };
 
   return (

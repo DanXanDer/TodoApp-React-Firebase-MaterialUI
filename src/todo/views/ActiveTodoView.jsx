@@ -92,14 +92,6 @@ export const ActiveTodoView = ({ excessHeight }) => {
                 >
                   Save
                 </LoadingButton>
-                {/* <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  startIcon={<Save />}
-                >
-                  Save
-                </Button> */}
               </Grid>
             </Grid>
           </form>

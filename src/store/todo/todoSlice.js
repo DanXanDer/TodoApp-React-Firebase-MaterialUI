@@ -59,20 +59,25 @@ export const todoSlice = createSlice({
     onAddNewTask: (state, action) => {
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.todoId) {
-          todo.tasks.push(action.payload.task);
+          if (!todo.tasks) {
+            todo.tasks = [];
+          } else {
+            todo.tasks.push(action.payload.task);
+            state.activeTodo = todo;
+          }
         }
         return todo;
       });
       state.saving = false;
     },
     onLoadTask: (state, action) => {
-      console.log(action.payload);
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.todoId) {
           if (!todo.tasks) {
             todo.tasks = [];
           }
           todo.tasks.push(action.payload.task);
+          state.activeTodo = todo;
         }
         return todo;
       });

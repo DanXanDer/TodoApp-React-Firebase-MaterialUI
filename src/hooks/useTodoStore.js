@@ -172,6 +172,8 @@ export const useTodoStore = () => {
 
           dispatch(onLoadTask({ todoId: todo.id, task }));
         });
+      } else {
+        dispatch(onSetActiveTodo(todo));
       }
 
       return {

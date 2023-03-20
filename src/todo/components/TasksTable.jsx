@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { TasksTableHead, TasksTableToolbar } from "./";
 import { Typography } from "@mui/material";
+import { useMemo, useState } from "react";
+import { useTodoStore } from "../../hooks";
 
 function createData(name, calories) {
   return {
@@ -18,33 +19,46 @@ function createData(name, calories) {
   };
 }
 
-const rows = [
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-  createData("Cupcake", 305),
-];
+// const rows = [
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+//   createData("Cupcake", 305),
+// ];
 
 export const TasksTable = () => {
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { activeTodo } = useTodoStore();
+
+  const taskRows = useMemo(() => {
+    const tasks = [];
+    if (!!activeTodo.tasks) {
+      activeTodo.tasks.forEach((task) => {
+        tasks.push(task);
+      });
+    }
+    console.log(tasks);
+    return tasks;
+  }, [activeTodo]);
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -88,34 +102,35 @@ export const TasksTable = () => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - taskRows.length) : 0;
 
   return (
-    <Box sx={{ width: "100%"}}>
+    <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TasksTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ height: "70%" }} >
+        <TableContainer sx={{ height: "70%" }}>
           <Table sx={{ height: "100%" }} aria-labelledby="tableTitle">
             <TasksTableHead
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
-              rowCount={rows.length}
+              rowCount={taskRows.length}
             />
-            {/* <TableBody>
-              {rows
+
+            <TableBody>
+              {taskRows
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                .map((taskRow, index) => {
+                  const isItemSelected = isSelected(taskRow.taskDesc);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, taskRow.taskDesc)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={taskRow.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -133,9 +148,9 @@ export const TasksTable = () => {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {taskRow.taskDesc}
                       </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
+                      <TableCell align="right">{taskRow.completed}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -145,13 +160,13 @@ export const TasksTable = () => {
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
-            </TableBody> */}
+            </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={taskRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
