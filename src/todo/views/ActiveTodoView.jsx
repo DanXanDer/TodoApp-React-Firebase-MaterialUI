@@ -26,14 +26,24 @@ export const ActiveTodoView = ({ excessHeight }) => {
   const { activeTodo, startAddNewTask, startDeleteTodo } = useTodoStore();
 
   const handleDeleteTodo = async () => {
-    setDeleting(true);
-    const { ok } = await startDeleteTodo();
-    if (ok === true) {
-      swal("ToDo deleted!", "ToDo has been deleted successfuly", "success");
-    } else {
-      swal("An error has ocurred", "ToDo couldn't be deleted", "error");
+    const willDelete = await swal({
+      title: "Are you sure you want to delete this todo?",
+      text: "All the tasks of the todo will also be deleted!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    });
+
+    if (willDelete === true) {
+      setDeleting(true);
+      const { ok } = await startDeleteTodo();
+      if (ok === true) {
+        swal("ToDo deleted!", "ToDo has been deleted successfuly", "success");
+      } else {
+        swal("An error has ocurred", "ToDo couldn't be deleted", "error");
+      }
+      setDeleting(false);
     }
-    setDeleting(false);
   };
 
   const handleTaskSubmit = async (event) => {
@@ -100,14 +110,16 @@ export const ActiveTodoView = ({ excessHeight }) => {
           <TasksTable />
         </Grid>
         <Grid item sx={{ justifySelf: "end" }}>
-          <Button
+          <LoadingButton
+            loading={deleting}
+            loadingPosition="start"
             onClick={handleDeleteTodo}
             color="error"
             variant="contained"
             startIcon={<Delete />}
           >
             Delete TODO
-          </Button>
+          </LoadingButton>
         </Grid>
       </Grid>
     </>

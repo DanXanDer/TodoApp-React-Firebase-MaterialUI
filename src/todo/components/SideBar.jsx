@@ -1,10 +1,19 @@
-import { Box, Drawer, Toolbar, Typography } from "@mui/material";
-import { useState } from "react";
+import { Add } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Drawer,
+  Grid,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { useUiStore } from "../../hooks";
-import { SideBarList } from "./SideBarList";
+import { SideBarContent } from "./SideBarContent";
 
 export const SideBar = ({ drawerWidth }) => {
-  const { mobileOpen, changeMobileOpenStatus } = useUiStore();
+  const { mobileOpen, changeMobileOpenStatus } =
+    useUiStore();
 
   const handleDrawerToggle = () => {
     changeMobileOpenStatus(!mobileOpen);
@@ -35,7 +44,7 @@ export const SideBar = ({ drawerWidth }) => {
             },
           }}
         >
-          <SideBarList />
+          <SideBarContent />
         </Drawer>
         <Drawer
           variant="permanent"
@@ -49,7 +58,7 @@ export const SideBar = ({ drawerWidth }) => {
           }}
           open
         >
-          <SideBarList />
+          <SideBarContent />
         </Drawer>
       </Box>
     </>

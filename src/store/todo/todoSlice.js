@@ -20,9 +20,13 @@ export const todoSlice = createSlice({
     todos: [],
     activeTodo: null,
     todoEdit: null,
+    todosStatus: "loading", // loading, empty or noEmpty
   },
   reducers: {
     onAddNewTodo: (state, action) => {
+      if (state.todos.length === 0) {
+        state.todosStatus = "noEmpty";
+      }
       state.todos.push(action.payload);
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.id) {
@@ -34,6 +38,9 @@ export const todoSlice = createSlice({
       state.saving = false;
     },
     onLoadTodo: (state, action) => {
+      if (state.todos.length === 0) {
+        state.todosStatus = "noEmpty";
+      }
       state.todos.push(action.payload);
     },
     onDeleteTodo: (state) => {
@@ -41,9 +48,13 @@ export const todoSlice = createSlice({
         (todo) => todo.id !== state.activeTodo.id
       );
       state.activeTodo = null;
+      if (state.todos.length === 0) {
+        state.todosStatus = "empty";
+      }
     },
     onDeleteAllTodos: (state) => {
       state.todos = [];
+      state.todosStatus = "empty";
     },
     onEditTodo: (state, action) => {
       state.todos = state.todos.map((todo) => {
@@ -95,6 +106,9 @@ export const todoSlice = createSlice({
     onSetActiveTodo: (state, action) => {
       state.activeTodo = action.payload;
     },
+    onSetEmptyTodos: (state) => {
+      state.todosStatus = "empty";
+    },
   },
 });
 
@@ -109,4 +123,5 @@ export const {
   onLoadTodo,
   onDeleteAllTodos,
   onLoadTask,
+  onSetEmptyTodos
 } = todoSlice.actions;

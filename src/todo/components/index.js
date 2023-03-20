@@ -6,3 +6,4 @@ export * from "./TodoModal";
 export * from "./TasksTableToolbar";
 export * from "./TasksTableHead";
 export * from "./TasksTable";
+export * from "./SideBarContent"

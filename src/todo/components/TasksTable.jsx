@@ -56,7 +56,6 @@ export const TasksTable = () => {
         tasks.push(task);
       });
     }
-    console.log(tasks);
     return tasks;
   }, [activeTodo]);
 

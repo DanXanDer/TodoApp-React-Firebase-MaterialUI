@@ -26,6 +26,6 @@ export const muiTheme = createTheme({
       textTransform: "none",
       fontSize: "16px",
     },
-    
   },
+  
 });

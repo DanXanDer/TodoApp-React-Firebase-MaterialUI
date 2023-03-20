@@ -19,13 +19,14 @@ import {
   onSetActiveTodo,
   onSetEditTodo,
   onLoadTask,
+  onSetEmptyTodos,
 } from "../store/todo/todoSlice";
 import { useAuthStore } from "./useAuthStore";
 
 export const useTodoStore = () => {
   const { user } = useAuthStore();
 
-  const { todos, todoEdit, activeTodo } = useSelector(
+  const { todos, todoEdit, activeTodo, todosStatus } = useSelector(
     (state) => state.todoSlice
   );
 
@@ -131,19 +132,23 @@ export const useTodoStore = () => {
         collection(FireBaseDB, `/users/${user.uid}/todos`)
       );
 
-      todoDocs.forEach((todo) => {
-        const { startDate, endDate } = todo.data();
-        const startDateParsed = startDate.toDate();
-        const endDateParsed = endDate.toDate();
-        dispatch(
-          onLoadTodo({
-            ...todo.data(),
-            id: todo.id,
-            startDate: startDateParsed,
-            endDate: endDateParsed,
-          })
-        );
-      });
+      if (todoDocs.docs.length > 0) {
+        todoDocs.forEach((todo) => {
+          const { startDate, endDate } = todo.data();
+          const startDateParsed = startDate.toDate();
+          const endDateParsed = endDate.toDate();
+          dispatch(
+            onLoadTodo({
+              ...todo.data(),
+              id: todo.id,
+              startDate: startDateParsed,
+              endDate: endDateParsed,
+            })
+          );
+        });
+      } else {
+        dispatch(onSetEmptyTodos());
+      }
 
       return {
         ok: true,
@@ -197,6 +202,7 @@ export const useTodoStore = () => {
     todoEdit,
     activeTodo,
     user,
+    todosStatus,
 
     //Methods
     startAddNewTodo,
@@ -208,5 +214,6 @@ export const useTodoStore = () => {
     startLoadingTodos,
     deleteAllTodos,
     startLoadingTasks,
+    
   };
 };
