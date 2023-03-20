@@ -17,7 +17,6 @@ import {
   onLogin,
   onLogout,
 } from "../store/auth";
-import { useEffect } from "react";
 
 const providerGoogle = new GoogleAuthProvider();
 
@@ -37,7 +36,6 @@ export const useAuthStore = () => {
     dispatch(onErrorMsg(error));
   };
 
-  //TODO: User register
   const startRegisterWithEmailAndPassword = async ({
     displayName,
     email,

@@ -33,7 +33,7 @@ export const todoSlice = createSlice({
       state.activeTodo = action.payload;
       state.saving = false;
     },
-    onAddTodo: (state, action) => {
+    onLoadTodo: (state, action) => {
       state.todos.push(action.payload);
     },
     onDeleteTodo: (state) => {
@@ -41,6 +41,9 @@ export const todoSlice = createSlice({
         (todo) => todo.id !== state.activeTodo.id
       );
       state.activeTodo = null;
+    },
+    onDeleteAllTodos: (state) => {
+      state.todos = [];
     },
     onEditTodo: (state, action) => {
       state.todos = state.todos.map((todo) => {
@@ -55,12 +58,24 @@ export const todoSlice = createSlice({
     },
     onAddNewTask: (state, action) => {
       state.todos = state.todos.map((todo) => {
-        if (todo.id === action.payload.id) {
+        if (todo.id === action.payload.todoId) {
           todo.tasks.push(action.payload.task);
         }
         return todo;
       });
       state.saving = false;
+    },
+    onLoadTask: (state, action) => {
+      console.log(action.payload);
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.todoId) {
+          if (!todo.tasks) {
+            todo.tasks = [];
+          }
+          todo.tasks.push(action.payload.task);
+        }
+        return todo;
+      });
     },
     onDeleteTask: (state, action) => {
       state.todos = state.todos.map((todo) => {
@@ -86,5 +101,7 @@ export const {
   onEditTodo,
   onSetEditTodo,
   onSetActiveTodo,
-  onAddTodo,
+  onLoadTodo,
+  onDeleteAllTodos,
+  onLoadTask,
 } = todoSlice.actions;

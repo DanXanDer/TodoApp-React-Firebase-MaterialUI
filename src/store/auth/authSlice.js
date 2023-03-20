@@ -4,7 +4,6 @@ export const authSlice = createSlice({
   name: "authSlice",
   initialState: {
     status: "checking",
-    todos: [],
     user: {
       uid: "",
       displayName: "",
@@ -25,7 +24,6 @@ export const authSlice = createSlice({
     },
     onLogout: (state) => {
       state.status = "not-authenticated";
-      state.todos = [];
       state.user = {
         id: "",
         displayName: "",

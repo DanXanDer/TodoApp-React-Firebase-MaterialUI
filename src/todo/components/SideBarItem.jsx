@@ -20,7 +20,8 @@ import { useTodoStore, useUiStore } from "../../hooks";
 export const SideBarItem = ({ todo }) => {
   const { openModal } = useUiStore();
 
-  const { setEditTodo, activeTodo, setActiveTodo } = useTodoStore();
+  const { activeTodo, setActiveTodo, setEditTodo, startLoadingTasks } =
+    useTodoStore();
 
   const handleOpenModal = () => {
     openModal();
@@ -45,14 +46,14 @@ export const SideBarItem = ({ todo }) => {
     }
   }, [todo]);
 
-  const handleSelectActiveTodo = () => {
+  const handleSelectActiveTodo = async () => {
     setActiveTodo(todo);
+    await startLoadingTasks(todo);
   };
 
   return (
     <div>
       <ListItem
-      
         disablePadding
         secondaryAction={
           <IconButton onClick={handleOpenModal} edge="end" color="success">
@@ -70,7 +71,6 @@ export const SideBarItem = ({ todo }) => {
                 backgroundColor: "primary.light",
               },
             },
-            
           }}
         >
           <ListItemIcon sx={{ color: "secondary.main" }}>

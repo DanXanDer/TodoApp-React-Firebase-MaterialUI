@@ -6,7 +6,10 @@ import { onLogin, onLogout } from "../store/auth";
 import { useTodoStore } from "./useTodoStore";
 
 export const useCheckAuth = () => {
+
   const { status } = useSelector((state) => state.authSlice);
+
+  const { deleteAllTodos } = useTodoStore();
 
   const dispatch = useDispatch();
 
@@ -15,7 +18,8 @@ export const useCheckAuth = () => {
   useEffect(() => {
     onAuthStateChanged(FireBaseAuth, async (user) => {
       if (!user) {
-        return dispatch(onLogout());
+        dispatch(onLogout());
+        deleteAllTodos();
       } else {
         const { displayName, uid, email } = user;
         dispatch(onLogin({ displayName, uid, email }));

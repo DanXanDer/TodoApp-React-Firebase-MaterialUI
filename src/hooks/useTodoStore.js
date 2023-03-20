@@ -12,11 +12,13 @@ import { FireBaseDB } from "../firebase/config";
 import {
   onAddNewTask,
   onAddNewTodo,
-  onAddTodo,
+  onLoadTodo,
+  onDeleteAllTodos,
   onDeleteTodo,
   onEditTodo,
   onSetActiveTodo,
   onSetEditTodo,
+  onLoadTask,
 } from "../store/todo/todoSlice";
 import { useAuthStore } from "./useAuthStore";
 
@@ -90,7 +92,7 @@ export const useTodoStore = () => {
 
       const newTask = { ...task, id };
 
-      dispatch(onAddNewTask({ id: activeTodo.id, task: newTask }));
+      dispatch(onAddNewTask({ todoId: activeTodo.id, task: newTask }));
 
       return {
         ok: true,
@@ -134,7 +136,7 @@ export const useTodoStore = () => {
         const startDateParsed = startDate.toDate();
         const endDateParsed = endDate.toDate();
         dispatch(
-          onAddTodo({
+          onLoadTodo({
             ...todo.data(),
             id: todo.id,
             startDate: startDateParsed,
@@ -154,6 +156,39 @@ export const useTodoStore = () => {
     }
   };
 
+  const startLoadingTasks = async (todo) => {
+    try {
+      const taskDocs = await getDocs(
+        collection(FireBaseDB, `/users/${user.uid}/todos/${todo.id}/tasks`)
+      );
+
+      if (taskDocs.docs.length > 0) {
+        taskDocs.forEach((taskDoc) => {
+          const { id } = taskDoc;
+          const task = {
+            id,
+            ...taskDoc.data(),
+          };
+
+          dispatch(onLoadTask({ todoId: todo.id, task }));
+        });
+      }
+
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      console.log(error.message);
+      return {
+        ok: false,
+      };
+    }
+  };
+
+  const deleteAllTodos = () => {
+    dispatch(onDeleteAllTodos());
+  };
+
   return {
     //Properties
     todos,
@@ -169,5 +204,7 @@ export const useTodoStore = () => {
     setActiveTodo,
     startDeleteTodo,
     startLoadingTodos,
+    deleteAllTodos,
+    startLoadingTasks,
   };
 };
