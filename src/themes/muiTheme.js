@@ -27,5 +27,4 @@ export const muiTheme = createTheme({
       fontSize: "16px",
     },
   },
-  
 });

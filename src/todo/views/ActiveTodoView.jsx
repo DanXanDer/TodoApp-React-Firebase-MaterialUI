@@ -1,7 +1,7 @@
 import { Delete, Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Button, Grid, TextField, Toolbar } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useTodoStore } from "../../hooks";
 import { TasksTable } from "../components";
 // import { TasksTable } from "../components";
@@ -21,9 +21,14 @@ export const ActiveTodoView = ({ excessHeight }) => {
     formState,
     handleInputChange,
     handleCheckEmptyForm,
+    handleFormReset,
   } = useForm({ initialForm });
 
   const { activeTodo, startAddNewTask, startDeleteTodo } = useTodoStore();
+
+  useEffect(() => {
+    handleFormReset(initialForm);
+  }, [activeTodo]);
 
   const handleDeleteTodo = async () => {
     const willDelete = await swal({
@@ -60,6 +65,7 @@ export const ActiveTodoView = ({ excessHeight }) => {
       }
     }
     setSaving(false);
+    handleFormReset(initialForm);
   };
 
   return (
@@ -106,9 +112,9 @@ export const ActiveTodoView = ({ excessHeight }) => {
             </Grid>
           </form>
         </Grid>
-        <Grid item xs={12}>
-          <TasksTable />
-        </Grid>
+
+        <TasksTable />
+
         <Grid item sx={{ justifySelf: "end" }}>
           <LoadingButton
             loading={deleting}

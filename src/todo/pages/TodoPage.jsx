@@ -4,7 +4,7 @@ import { useTodoStore, useUiStore } from "../../hooks";
 import { TodoModal, NavBar, SideBar } from "../components";
 import { ActiveTodoView, NothingSelectedView } from "../views";
 
-const drawerWidth = 300;
+const drawerWidth = 280;
 
 export const TodoPage = () => {
   const { activeTodo } = useTodoStore();

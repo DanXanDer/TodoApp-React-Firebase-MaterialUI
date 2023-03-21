@@ -71,7 +71,6 @@ export const TodoModal = () => {
 
   useEffect(() => {
     if (todoEdit !== null) {
-      console.log("gaa")
       setInitialForm({...todoEdit});
     }
   }, [modalOpen]);

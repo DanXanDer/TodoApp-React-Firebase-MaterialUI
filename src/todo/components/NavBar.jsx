@@ -1,7 +1,9 @@
 import { Logout, Menu, MenuOpen, SearchOutlined } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   AppBar,
   Box,
+  Button,
   IconButton,
   InputBase,
   Toolbar,
@@ -9,6 +11,7 @@ import {
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { useEffect, useMemo, useRef } from "react";
+import swal from "sweetalert";
 import { useAuthStore, useUiStore } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
@@ -83,9 +86,16 @@ export const NavBar = ({ drawerWidth }) => {
     changeMobileOpenStatus(!mobileOpen);
   };
 
-  const handleLogout = async (event) => {
-    event.preventDefault();
-    await startLogout();
+  const handleLogout = async () => {
+    const willDelete = await swal({
+      title: "Are you sure you want to logout?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    });
+    if (willDelete === true) {
+      await startLogout();
+    }
   };
 
   return (
@@ -127,14 +137,14 @@ export const NavBar = ({ drawerWidth }) => {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "flex" } }}>
-            <IconButton
+            <Button
               onClick={handleLogout}
-              size="large"
-              edge="end"
-              color="inherit"
+              color="error"
+              variant="outlined"
+              startIcon={<Logout />}
             >
-              <Logout />
-            </IconButton>
+              Exit
+            </Button>
           </Box>
         </Toolbar>
       </AppBar>

@@ -12,12 +12,14 @@ import { createSlice } from "@reduxjs/toolkit";
 //       completed: false,
 //     },
 //   ],
+//  priority,
 // };
 
 export const todoSlice = createSlice({
   name: "todoSlice",
   initialState: {
     todos: [],
+    filterValue: undefined,
     activeTodo: null,
     todoEdit: null,
     todosStatus: "loading", // loading, empty or noEmpty
@@ -37,11 +39,8 @@ export const todoSlice = createSlice({
       state.activeTodo = action.payload;
       state.saving = false;
     },
-    onLoadTodo: (state, action) => {
-      if (state.todos.length === 0) {
-        state.todosStatus = "noEmpty";
-      }
-      state.todos.push(action.payload);
+    onLoadTodos: (state, action) => {
+      state.todos = action.payload;
     },
     onDeleteTodo: (state) => {
       state.todos = state.todos.filter(
@@ -53,8 +52,11 @@ export const todoSlice = createSlice({
       }
     },
     onDeleteAllTodos: (state) => {
+      //Solo se llamará cuando se cierre sesión, por eso se coloca como estado inicial todosStatus = "loading"
       state.todos = [];
-      state.todosStatus = "empty";
+      state.activeTodo = null;
+      state.todoEdit = null;
+      state.todosStatus = "loading";
     },
     onEditTodo: (state, action) => {
       state.todos = state.todos.map((todo) => {
@@ -66,6 +68,9 @@ export const todoSlice = createSlice({
     },
     onSetEditTodo: (state, action) => {
       state.todoEdit = action.payload;
+    },
+    onSetFilterValue: (state, action) => {
+      state.filterValue = action.payload;
     },
     onAddNewTask: (state, action) => {
       state.todos = state.todos.map((todo) => {
@@ -81,18 +86,15 @@ export const todoSlice = createSlice({
       });
       state.saving = false;
     },
-    onLoadTask: (state, action) => {
+    onLoadTasks: (state, action) => {
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.todoId) {
-          if (!todo.tasks) {
-            todo.tasks = [];
-          }
-          todo.tasks.push(action.payload.task);
-          state.activeTodo = todo;
+          todo.tasks = action.payload.tasks;
         }
         return todo;
       });
     },
+
     onDeleteTask: (state, action) => {
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.todoId) {
@@ -106,22 +108,23 @@ export const todoSlice = createSlice({
     onSetActiveTodo: (state, action) => {
       state.activeTodo = action.payload;
     },
-    onSetEmptyTodos: (state) => {
-      state.todosStatus = "empty";
+    onSetTodosStatus: (state, action) => {
+      state.todosStatus = action.payload; //empty noEmpty loading
     },
   },
 });
 
 export const {
-  onAddNewTodo,
-  onDeleteTodo,
   onAddNewTask,
-  onDeleteTask,
-  onEditTodo,
-  onSetEditTodo,
-  onSetActiveTodo,
-  onLoadTodo,
+  onAddNewTodo,
   onDeleteAllTodos,
-  onLoadTask,
-  onSetEmptyTodos
+  onDeleteTask,
+  onDeleteTodo,
+  onEditTodo,
+  onSetFilterValue,
+  onLoadTasks,
+  onLoadTodos,
+  onSetActiveTodo,
+  onSetEditTodo,
+  onSetTodosStatus,
 } = todoSlice.actions;

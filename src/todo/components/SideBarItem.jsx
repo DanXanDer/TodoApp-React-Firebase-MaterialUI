@@ -18,10 +18,9 @@ import { useMemo } from "react";
 import { useTodoStore, useUiStore } from "../../hooks";
 
 export const SideBarItem = ({ todo }) => {
-  const { openModal } = useUiStore();
+  const { openModal, changeMobileOpenStatus, mobileOpen } = useUiStore();
 
-  const { activeTodo, setActiveTodo, setEditTodo, startLoadingTasks } =
-    useTodoStore();
+  const { activeTodo, setActiveTodo, setEditTodo } = useTodoStore();
 
   const handleOpenModal = () => {
     openModal();
@@ -46,13 +45,10 @@ export const SideBarItem = ({ todo }) => {
     }
   }, [todo]);
 
-  const handleSelectActiveTodo = async () => {
+  const handleSelectActiveTodo = () => {
     //TODO: Modificar para que cargue desde los arrays locales luego de que se haya cargado las tareas por primera vez desde la BD
-    if (!todo.tasks) {
-      await startLoadingTasks(todo);
-    } else {
-      setActiveTodo(todo);
-    }
+    setActiveTodo(todo);
+    changeMobileOpenStatus(!mobileOpen);
   };
 
   return (
@@ -60,7 +56,7 @@ export const SideBarItem = ({ todo }) => {
       <ListItem
         disablePadding
         secondaryAction={
-          <IconButton onClick={handleOpenModal} edge="end" color="success">
+          <IconButton onClick={handleOpenModal} edge="end" color="secondary">
             <Edit />
           </IconButton>
         }

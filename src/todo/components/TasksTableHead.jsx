@@ -11,7 +11,7 @@ const headCells = [
     id: "check",
     numeric: true,
     disablePadding: false,
-    label: "Check",
+    label: "Mask as complete",
   },
 
 ];

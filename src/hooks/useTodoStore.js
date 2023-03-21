@@ -12,21 +12,22 @@ import { FireBaseDB } from "../firebase/config";
 import {
   onAddNewTask,
   onAddNewTodo,
-  onLoadTodo,
+  onLoadTodos,
   onDeleteAllTodos,
   onDeleteTodo,
   onEditTodo,
   onSetActiveTodo,
   onSetEditTodo,
-  onLoadTask,
-  onSetEmptyTodos,
+  onLoadTasks,
+  onSetTodosStatus,
+  onSetFilterValue,
 } from "../store/todo/todoSlice";
 import { useAuthStore } from "./useAuthStore";
 
 export const useTodoStore = () => {
   const { user } = useAuthStore();
 
-  const { todos, todoEdit, activeTodo, todosStatus } = useSelector(
+  const { todos, todoEdit, activeTodo, todosStatus, filterValue } = useSelector(
     (state) => state.todoSlice
   );
 
@@ -128,6 +129,8 @@ export const useTodoStore = () => {
 
   const startLoadingTodos = async (user) => {
     try {
+      const todosAux = [];
+
       const todoDocs = await getDocs(
         collection(FireBaseDB, `/users/${user.uid}/todos`)
       );
@@ -137,18 +140,15 @@ export const useTodoStore = () => {
           const { startDate, endDate } = todo.data();
           const startDateParsed = startDate.toDate();
           const endDateParsed = endDate.toDate();
-          dispatch(
-            onLoadTodo({
-              ...todo.data(),
-              id: todo.id,
-              startDate: startDateParsed,
-              endDate: endDateParsed,
-            })
-          );
+          todosAux.push({
+            ...todo.data(),
+            id: todo.id,
+            startDate: startDateParsed,
+            endDate: endDateParsed,
+          });
         });
-      } else {
-        dispatch(onSetEmptyTodos());
       }
+      dispatch(onLoadTodos(todosAux));
 
       return {
         ok: true,
@@ -163,6 +163,8 @@ export const useTodoStore = () => {
 
   const startLoadingTasks = async (todo) => {
     try {
+      const tasksAux = [];
+
       const taskDocs = await getDocs(
         collection(FireBaseDB, `/users/${user.uid}/todos/${todo.id}/tasks`)
       );
@@ -174,15 +176,15 @@ export const useTodoStore = () => {
             id,
             ...taskDoc.data(),
           };
-
-          dispatch(onLoadTask({ todoId: todo.id, task }));
+          tasksAux.push(task);
         });
-      } else {
-        dispatch(onSetActiveTodo(todo));
       }
 
+      dispatch(onLoadTasks({ todoId: todo.id, tasks: tasksAux }));
+      console.log("hola");
       return {
         ok: true,
+        tasksAux,
       };
     } catch (error) {
       console.log(error.message);
@@ -192,8 +194,16 @@ export const useTodoStore = () => {
     }
   };
 
+  const setFilterValue = (filterValue) => {
+    dispatch(onSetFilterValue(filterValue));
+  };
+
   const deleteAllTodos = () => {
     dispatch(onDeleteAllTodos());
+  };
+
+  const setTodosStatus = (status) => {
+    dispatch(onSetTodosStatus(status));
   };
 
   return {
@@ -203,6 +213,7 @@ export const useTodoStore = () => {
     activeTodo,
     user,
     todosStatus,
+    filterValue,
 
     //Methods
     startAddNewTodo,
@@ -214,6 +225,7 @@ export const useTodoStore = () => {
     startLoadingTodos,
     deleteAllTodos,
     startLoadingTasks,
-    
+    setTodosStatus,
+    setFilterValue,
   };
 };

@@ -1,20 +1,29 @@
-import { Add, Inbox, Mail } from "@mui/icons-material";
-import { Button, Divider, Grid, List } from "@mui/material";
-import { useTodoStore, useUiStore } from "../../hooks";
+import { Divider, List } from "@mui/material";
+import { useMemo } from "react";
+import { useTodoStore } from "../../hooks";
 import { SideBarItem } from "./SideBarItem";
 
 export const SideBarList = () => {
+  const { todos, filterValue } = useTodoStore();
 
-  const { todos } = useTodoStore();
+  const displayedTodos = useMemo(() => {
+    if (filterValue) {
+      return todos.filter((todo) => todo.priority === filterValue);
+    } else {
+      return todos;
+    }
+  }, [todos, filterValue]);
 
   return (
     <div>
-      {/* <Divider color="white" /> */}
-      <List
-        sx={{ color: "secondary.main", padding: 0 }}
-      >
-        {todos.map((todo) => {
-          return <SideBarItem key={todo.id} todo={todo} />;
+      <List sx={{ color: "secondary.main", padding: 0 }}>
+        {displayedTodos.map((todo) => {
+          return (
+            <div key={todo.id}>
+              <SideBarItem todo={todo} />
+              <Divider sx={{ backgroundColor: "info.dark" }} />
+            </div>
+          );
         })}
       </List>
     </div>

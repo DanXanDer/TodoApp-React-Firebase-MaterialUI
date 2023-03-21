@@ -12,52 +12,12 @@ import { Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useTodoStore } from "../../hooks";
 
-function createData(name, calories) {
-  return {
-    name,
-    calories,
-  };
-}
-
-// const rows = [
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-//   createData("Cupcake", 305),
-// ];
-
 export const TasksTable = () => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { activeTodo } = useTodoStore();
-
-  const taskRows = useMemo(() => {
-    const tasks = [];
-    if (!!activeTodo.tasks) {
-      activeTodo.tasks.forEach((task) => {
-        tasks.push(task);
-      });
-    }
-    return tasks;
-  }, [activeTodo]);
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -101,22 +61,24 @@ export const TasksTable = () => {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - taskRows.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - activeTodo.tasks.length)
+      : 0;
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", overflowX: 'auto' }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TasksTableToolbar numSelected={selected.length} />
         <TableContainer sx={{ height: "70%" }}>
-          <Table sx={{ height: "100%" }} aria-labelledby="tableTitle">
+          <Table sx={{ height: "100%", minWidth: 750 }} aria-labelledby="tableTitle">
             <TasksTableHead
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
-              rowCount={taskRows.length}
+              rowCount={activeTodo.tasks.length}
             />
 
             <TableBody>
-              {taskRows
+              {activeTodo.tasks
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((taskRow, index) => {
                   const isItemSelected = isSelected(taskRow.taskDesc);
@@ -165,7 +127,7 @@ export const TasksTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={taskRows.length}
+          count={activeTodo.tasks.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
