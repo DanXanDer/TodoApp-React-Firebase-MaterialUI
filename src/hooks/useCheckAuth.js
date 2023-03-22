@@ -14,7 +14,7 @@ export const useCheckAuth = () => {
 
   const {
     todos,
-    startLoadingTasks,
+    startLoadingTodoTasks,
     startLoadingTodos,
     deleteAllTodos,
     setTodosStatus,
@@ -26,7 +26,7 @@ export const useCheckAuth = () => {
         if (todos.length > 0) {
           //TODO: Optimizar la carga de tareas
           const loadingTasksPromises = todos.map((todo) =>
-            startLoadingTasks(todo)
+            startLoadingTodoTasks(todo)
           );
           await Promise.all(loadingTasksPromises);
           setTodosStatus("noEmpty");
@@ -46,9 +46,11 @@ export const useCheckAuth = () => {
         setFirstRender(false);
       } else {
         const { displayName, uid, email } = user;
-        dispatch(onLogin({ displayName, uid, email }));
-        await startLoadingTodos(user);
-        setFirstRender(true);
+        if (displayName !== null) {
+          dispatch(onLogin({ displayName, uid, email }));
+          await startLoadingTodos(user);
+          setFirstRender(true);
+        }
       }
     });
   }, []);

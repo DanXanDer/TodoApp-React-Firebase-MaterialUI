@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import { useTodoStore } from "../../hooks/useTodoStore";
 
 export const TasksTableToolbar = ({ numSelected, selected }) => {
-  const { startDeletingTodoTasks } = useTodoStore();
+  const { startDeletingTodoTasks,/*  startCompleteTodoTasks */ } = useTodoStore();
 
   const handleDeleteTodoTasks = async () => {
     const willDelete = await swal({
@@ -23,6 +23,10 @@ export const TasksTableToolbar = ({ numSelected, selected }) => {
       }
     }
   };
+
+  // const handleCompleteTodoTasks = async () => {
+  //   await startCompleteTodoTasks(selected);
+  // };
 
   return (
     <Toolbar
@@ -65,11 +69,11 @@ export const TasksTableToolbar = ({ numSelected, selected }) => {
               <Delete />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Mark as completed">
-            <IconButton>
+          {/* <Tooltip title="Mark as completed">
+            <IconButton onClick={handleCompleteTodoTasks}>
               <DoneOutline />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
         </>
       ) : null}
     </Toolbar>

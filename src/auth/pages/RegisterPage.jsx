@@ -35,8 +35,8 @@ export const RegisterPage = () => {
     formState,
     handleInputChange,
     handleFormReset,
-    handleCheckEmptyForm
-  } = useForm({initialForm, formErrors});
+    handleCheckEmptyForm,
+  } = useForm({ initialForm, formErrors });
 
   const [passwordValid, setPasswordValid] = useState(true);
 
@@ -54,16 +54,15 @@ export const RegisterPage = () => {
   const handleSubmitForm = async (event) => {
     event.preventDefault();
     changeSubmitStatus(true);
-    if(handleCheckEmptyForm()){
-      swal("Invalid register", "Don't leave empty fields!", "error")
-    }
-    else if (!passwordValid || !formValid) {
+    if (handleCheckEmptyForm()) {
+      swal("Invalid register", "Don't leave empty fields!", "error");
+    } else if (!passwordValid || !formValid) {
       swal("Invalid register", "Try again", "error");
     } else {
-      const {ok} = await startRegisterWithEmailAndPassword(formState);
+      const { ok } = await startRegisterWithEmailAndPassword(formState);
       if (ok) {
         swal("Account created", "You can login now", "success");
-        handleFormReset();
+        handleFormReset(initialForm);
         changeSubmitStatus(false);
       } else {
         swal("Invalid register", "Email already exists", "error");

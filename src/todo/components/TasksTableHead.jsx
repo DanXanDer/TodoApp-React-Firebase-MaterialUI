@@ -5,7 +5,7 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Task",
+    label: "Task name",
   },
   
 ];

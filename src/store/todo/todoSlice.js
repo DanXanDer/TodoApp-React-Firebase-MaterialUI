@@ -103,6 +103,18 @@ export const todoSlice = createSlice({
         return todo;
       });
     },
+    onCompleteTodoTask: (state, action) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.todoId) {
+          const task = todo.tasks.find(
+            (task) => task.id === action.payload.taskId
+          );
+          task.completed = !task.completed;
+          state.activeTodo = todo;
+        }
+        return todo;
+      });
+    },
     onSetActiveTodo: (state, action) => {
       state.activeTodo = action.payload;
     },
@@ -125,4 +137,5 @@ export const {
   onSetActiveTodo,
   onSetEditTodo,
   onSetTodosStatus,
+  onCompleteTodoTask,
 } = todoSlice.actions;

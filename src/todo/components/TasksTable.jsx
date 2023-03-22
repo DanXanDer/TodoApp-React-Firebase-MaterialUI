@@ -10,13 +10,14 @@ import Checkbox from "@mui/material/Checkbox";
 import { TasksTableHead, TasksTableToolbar } from "./";
 import { useEffect, useState } from "react";
 import { useTodoStore } from "../../hooks";
+import { Tooltip } from "@mui/material";
 
 export const TasksTable = () => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { activeTodo } = useTodoStore();
+  const { activeTodo, startCompleteTodoTasks } = useTodoStore();
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -62,6 +63,10 @@ export const TasksTable = () => {
     setPage(0);
   };
 
+  const handleCompleteTodoTasks = async (event, taskId, taskCompletedValue) => {
+    await startCompleteTodoTasks(taskId, taskCompletedValue);
+  };
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0
@@ -98,7 +103,6 @@ export const TasksTable = () => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, taskRow.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -107,6 +111,7 @@ export const TasksTable = () => {
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
+                          onClick={(event) => handleClick(event, taskRow.id)}
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
@@ -114,14 +119,31 @@ export const TasksTable = () => {
                           }}
                         />
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
+                      <Tooltip
+                        followCursor
+                        arrow
+                        title={taskRow.completed === true ? "Task completed" : "Task incompleted"}
                       >
-                        {taskRow.taskDesc}
-                      </TableCell>
+                        <TableCell
+                          onClick={(event) =>
+                            handleCompleteTodoTasks(
+                              event,
+                              taskRow.id,
+                              taskRow.completed
+                            )
+                          }
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          sx={{
+                            textDecorationLine:
+                              taskRow.completed === true ? "line-through" : "",
+                          }}
+                        >
+                          {taskRow.taskDesc}
+                        </TableCell>
+                      </Tooltip>
                     </TableRow>
                   );
                 })}

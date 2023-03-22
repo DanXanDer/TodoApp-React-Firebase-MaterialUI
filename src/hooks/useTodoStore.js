@@ -5,8 +5,8 @@ import {
   deleteDoc,
   doc,
   getDocs,
-  setDoc,
   updateDoc,
+  getDoc,
 } from "firebase/firestore/lite";
 import { FireBaseDB } from "../firebase/config";
 import {
@@ -22,6 +22,7 @@ import {
   onSetTodosStatus,
   onSetFilterValue,
   onDeleteTodoTasks,
+  onCompleteTodoTask,
 } from "../store/todo/todoSlice";
 import { useAuthStore } from "./useAuthStore";
 
@@ -162,7 +163,7 @@ export const useTodoStore = () => {
     }
   };
 
-  const startLoadingTasks = async (todo) => {
+  const startLoadingTodoTasks = async (todo) => {
     try {
       const tasksAux = [];
 
@@ -202,16 +203,20 @@ export const useTodoStore = () => {
           `/users/${user.uid}/todos/${activeTodo.id}/tasks/${taskId}`
         );
       });
-      for await (const docToDelete of docsToDelete) {
+
+      const promisesDeleteTask = docsToDelete.map((docToDelete) => {
         deleteDoc(docToDelete);
-      }
+        console.log("gaaa");
+      });
+
+      await Promise.all(promisesDeleteTask);
+
       const leftTasks = activeTodo.tasks.filter((task) => {
         if (!selectedIds.includes(task.id)) {
           return task;
         }
       });
-
-      dispatch(onDeleteTodoTasks({todoId: activeTodo.id, tasks: leftTasks}))
+      dispatch(onDeleteTodoTasks({ todoId: activeTodo.id, tasks: leftTasks }));
 
       return {
         ok: true,
@@ -225,9 +230,75 @@ export const useTodoStore = () => {
     }
   };
 
-  // const startDeletingTodoTasks = async({todoId, taskId}) => {
+  const startCompleteTodoTasks = async (taskId, taskCompletedValue) => {
+    try {
+      const docRef = doc(
+        FireBaseDB,
+        `/users/${user.uid}/todos/${activeTodo.id}/tasks/${taskId}`
+      );
 
-  // }
+      await updateDoc(docRef, {
+        completed: !taskCompletedValue,
+      });
+
+      dispatch(onCompleteTodoTask({ todoId: activeTodo.id, taskId }));
+
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      console.log(error.message);
+      return {
+        ok: false,
+      };
+    }
+
+    /* const docs = [];
+
+  
+
+    try {
+      selectedIds.forEach((taskId) => {
+        const taskRef = doc(
+          FireBaseDB,
+          `/users/${user.uid}/todos/${activeTodo.id}/tasks/${taskId}`
+        );
+        docs.push({ taskRef });
+      });
+
+      docs.forEach(async (doc) => {
+        const docSnapshot = await getDoc(doc.taskRef);
+        doc.completed = docSnapshot.data().completed;
+        await updateDoc(doc.taskRef, {
+          completed: !doc.completed,
+        });
+      });
+
+      const copiedActiveTodoTasks = activeTodo.tasks.map((task) => {
+        return { ...task };
+      });
+
+      const modifiedTasks = copiedActiveTodoTasks.map((task) => {
+        if (selectedIds.includes(task.id) === true) {
+          task.completed = !task.completed;
+        }
+        return task;
+      });
+
+      dispatch(
+        onCompleteTodoTask({ todoId: activeTodo.id, tasks: modifiedTasks })
+      );
+
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+      };
+    } */
+  };
 
   const setFilterValue = (filterValue) => {
     dispatch(onSetFilterValue(filterValue));
@@ -243,25 +314,26 @@ export const useTodoStore = () => {
 
   return {
     //Properties
-    todos,
-    todoEdit,
     activeTodo,
-    user,
-    todosStatus,
     filterValue,
+    todoEdit,
+    todos,
+    todosStatus,
+    user,
 
     //Methods
-    startAddNewTodo,
-    startEditTodo,
-    startAddNewTask,
-    setEditTodo,
-    setActiveTodo,
-    startDeleteTodo,
-    startLoadingTodos,
     deleteAllTodos,
-    startLoadingTasks,
-    setTodosStatus,
+    setActiveTodo,
+    setEditTodo,
     setFilterValue,
+    setTodosStatus,
+    startAddNewTask,
+    startAddNewTodo,
+    startCompleteTodoTasks,
+    startDeleteTodo,
     startDeletingTodoTasks,
+    startEditTodo,
+    startLoadingTodos,
+    startLoadingTodoTasks,
   };
 };
