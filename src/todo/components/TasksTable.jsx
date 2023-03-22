@@ -8,8 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { TasksTableHead, TasksTableToolbar } from "./";
-import { Typography } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTodoStore } from "../../hooks";
 
 export const TasksTable = () => {
@@ -19,14 +18,14 @@ export const TasksTable = () => {
 
   const { activeTodo } = useTodoStore();
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -41,9 +40,13 @@ export const TasksTable = () => {
     setSelected(newSelected);
   };
 
+  useEffect(() => {
+    setSelected([]);
+  }, [activeTodo]);
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = activeTodo.tasks.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -66,11 +69,19 @@ export const TasksTable = () => {
       : 0;
 
   return (
-    <Box sx={{ width: "100%", overflowX: 'auto' }}>
+    <Box
+      sx={{
+        width: "100%",
+        overflowX: "auto",
+      }}
+    >
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <TasksTableToolbar numSelected={selected.length} />
+        <TasksTableToolbar numSelected={selected.length} selected={selected} />
         <TableContainer sx={{ height: "70%" }}>
-          <Table sx={{ height: "100%", minWidth: 750 }} aria-labelledby="tableTitle">
+          <Table
+            sx={{ height: "100%", minWidth: 750 }}
+            aria-labelledby="tableTitle"
+          >
             <TasksTableHead
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
@@ -81,13 +92,13 @@ export const TasksTable = () => {
               {activeTodo.tasks
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((taskRow, index) => {
-                  const isItemSelected = isSelected(taskRow.taskDesc);
+                  const isItemSelected = isSelected(taskRow.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, taskRow.taskDesc)}
+                      onClick={(event) => handleClick(event, taskRow.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -111,7 +122,6 @@ export const TasksTable = () => {
                       >
                         {taskRow.taskDesc}
                       </TableCell>
-                      <TableCell align="right">{taskRow.completed}</TableCell>
                     </TableRow>
                   );
                 })}

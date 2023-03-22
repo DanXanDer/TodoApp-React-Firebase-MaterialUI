@@ -1,7 +1,29 @@
-import { Delete, FilterList } from "@mui/icons-material";
+import { Delete, DoneOutline } from "@mui/icons-material";
 import { alpha, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
+import swal from "sweetalert";
+import { useTodoStore } from "../../hooks/useTodoStore";
 
-export const TasksTableToolbar = ({ numSelected }) => {
+export const TasksTableToolbar = ({ numSelected, selected }) => {
+  const { startDeletingTodoTasks } = useTodoStore();
+
+  const handleDeleteTodoTasks = async () => {
+    const willDelete = await swal({
+      title: "Delete task(s)",
+      text: "Are you sure you want to delete these tasks?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    });
+    if (willDelete === true) {
+      const { ok } = await startDeletingTodoTasks(selected);
+      if (ok === true) {
+        swal("Success", "Selected tasks has been deleted", "success");
+      } else {
+        swal("Error", "An error has ocurred. Try again", "error");
+      }
+    }
+  };
+
   return (
     <Toolbar
       sx={{
@@ -37,11 +59,18 @@ export const TasksTableToolbar = ({ numSelected }) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Delete />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Delete">
+            <IconButton onClick={handleDeleteTodoTasks}>
+              <Delete />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Mark as completed">
+            <IconButton>
+              <DoneOutline />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : null}
     </Toolbar>
   );

@@ -55,6 +55,7 @@ const cleanedForm = {
 };
 
 export const TodoModal = () => {
+  
   const [initialForm, setInitialForm] = useState(cleanedForm);
   
   const [saving, setSaving] = useState(false);

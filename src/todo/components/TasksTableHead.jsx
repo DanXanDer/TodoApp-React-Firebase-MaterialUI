@@ -7,13 +7,7 @@ const headCells = [
     disablePadding: true,
     label: "Task",
   },
-  {
-    id: "check",
-    numeric: true,
-    disablePadding: false,
-    label: "Mask as complete",
-  },
-
+  
 ];
 
 export const TasksTableHead = ({ onSelectAllClick, numSelected, rowCount }) => {

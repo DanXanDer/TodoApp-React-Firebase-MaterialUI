@@ -94,13 +94,11 @@ export const todoSlice = createSlice({
         return todo;
       });
     },
-
-    onDeleteTask: (state, action) => {
+    onDeleteTodoTasks: (state, action) => {
       state.todos = state.todos.map((todo) => {
         if (todo.id === action.payload.todoId) {
-          todo.tasks = todo.tasks.filter(
-            (task) => task.taskId !== action.payload.taskId
-          );
+          todo.tasks = action.payload.tasks;
+          state.activeTodo = todo;
         }
         return todo;
       });
@@ -118,7 +116,7 @@ export const {
   onAddNewTask,
   onAddNewTodo,
   onDeleteAllTodos,
-  onDeleteTask,
+  onDeleteTodoTasks,
   onDeleteTodo,
   onEditTodo,
   onSetFilterValue,

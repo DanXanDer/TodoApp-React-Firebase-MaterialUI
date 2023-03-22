@@ -5,7 +5,6 @@ export const useForm = ({ initialForm = {}, formErrors = {} }) => {
   const [formState, setFormState] = useState(initialForm);
   const [formValidator, setFormValidator] = useState({});
   const { errorMsg, cleanErrorMsg, submitted } = useAuthStore();
-
   useEffect(() => {
     if (errorMsg !== undefined) {
       cleanErrorMsg();

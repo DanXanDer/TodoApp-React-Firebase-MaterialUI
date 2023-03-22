@@ -24,6 +24,7 @@ export const useCheckAuth = () => {
     const fetchTasks = async () => {
       if (firstRender === true) {
         if (todos.length > 0) {
+          //TODO: Optimizar la carga de tareas
           const loadingTasksPromises = todos.map((todo) =>
             startLoadingTasks(todo)
           );

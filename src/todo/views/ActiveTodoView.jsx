@@ -113,7 +113,7 @@ export const ActiveTodoView = ({ excessHeight }) => {
           </form>
         </Grid>
 
-        <TasksTable />
+        <TasksTable/>
 
         <Grid item sx={{ justifySelf: "end" }}>
           <LoadingButton
