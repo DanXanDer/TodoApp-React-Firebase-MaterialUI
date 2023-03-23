@@ -1,7 +1,7 @@
-import { Delete, Save } from "@mui/icons-material";
+import { CalendarMonth, Delete, Save } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { Button, Grid, TextField, Toolbar } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Button, Grid, TextField, Toolbar, Typography } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, useTodoStore } from "../../hooks";
 import { TasksTable } from "../components";
 // import { TasksTable } from "../components";
@@ -16,7 +16,6 @@ export const ActiveTodoView = ({ excessHeight }) => {
   const [deleting, setDeleting] = useState(false);
 
   const {
-    completed,
     taskDesc,
     formState,
     handleInputChange,
@@ -25,6 +24,14 @@ export const ActiveTodoView = ({ excessHeight }) => {
   } = useForm({ initialForm });
 
   const { activeTodo, startAddNewTask, startDeleteTodo } = useTodoStore();
+
+  const stringifiedStartDate = useMemo(() => {
+    return activeTodo.startDate.toLocaleDateString("en-GB");
+  }, [activeTodo]);
+
+  const stringifiedEndDate = useMemo(() => {
+    return activeTodo.endDate.toLocaleDateString("en-GB");
+  }, [activeTodo]);
 
   useEffect(() => {
     handleFormReset(initialForm);
@@ -75,7 +82,7 @@ export const ActiveTodoView = ({ excessHeight }) => {
         container
         sx={{
           display: "grid",
-          gridTemplate: "0fr 1fr 0fr / 1fr",
+          gridTemplate: "0fr 0fr 1fr 0fr / 1fr",
           gap: 2,
           borderRadius: 5,
           p: 3,
@@ -112,8 +119,26 @@ export const ActiveTodoView = ({ excessHeight }) => {
             </Grid>
           </form>
         </Grid>
-
-        <TasksTable/>
+        <Grid container sx={{ justifyContent: "space-between" }}>
+          <Grid item>
+            <Typography
+              sx={{ overflowWrap: "anywhere", fontWeight: "bolder" }}
+              variant="h6"
+            >
+              {activeTodo.title}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Grid container sx={{ alignItems: "center", gap: 1 }}>
+              <CalendarMonth />
+              <Typography variant="h6" sx={{ color: "primary.main" }}>
+                Fecha: {stringifiedStartDate} - {stringifiedEndDate}
+              </Typography>
+            </Grid>
+          </Grid>
+          {/* <Typography variant="h5">asdasdads </Typography> */}
+        </Grid>
+        <TasksTable />
 
         <Grid item sx={{ justifySelf: "end" }}>
           <LoadingButton

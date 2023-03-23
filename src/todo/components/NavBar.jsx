@@ -13,9 +13,9 @@ import {
   Typography,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import swal from "sweetalert";
-import { useAuthStore, useTodoStore, useUiStore } from "../../hooks";
+import { useAuthStore, useForm, useTodoStore, useUiStore } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -69,7 +69,7 @@ export const NavBar = ({ drawerWidth }) => {
 
   const { startLogout, displayName } = useAuthStore();
 
-  const { todos } = useTodoStore();
+  const { todos, setActiveTodo } = useTodoStore();
 
   const navRef = useRef(null);
 
@@ -110,6 +110,11 @@ export const NavBar = ({ drawerWidth }) => {
     }
   };
 
+  const handleOnChange = (event, value) => {
+    console.log(value);
+    setActiveTodo(value);
+  };
+
   return (
     <>
       <AppBar
@@ -139,21 +144,27 @@ export const NavBar = ({ drawerWidth }) => {
             {displayName}
           </Typography>
           <Autocomplete
+            includeInputInList
+            isOptionEqualToValue={(option, value) =>
+              option.value === value.value
+            }
+            onChange={(event, value) => handleOnChange(event, value)}
             id="grouped-demo"
             options={todoPriority.sort((a, b) =>
               a.priority.localeCompare(b.priority)
             )}
             groupBy={(option) => option.priority}
             getOptionLabel={(option) => option.title}
-            sx={{ width: "100%" }}
+            sx={{ width: "60%" }}
             renderInput={(params) => (
               <Search ref={params.InputProps.ref}>
                 <SearchIconWrapper>
                   <SearchOutlined />
                 </SearchIconWrapper>
-                <StyledInputBase 
-                inputProps={params.inputProps}
-                placeholder="Search…"/>
+                <StyledInputBase
+                  inputProps={params.inputProps}
+                  placeholder="Search todo"
+                />
               </Search>
               // <TextField variant="outlined" sx={{backgroundColor: "secondary.main"}} {...params} label="With categories" />
             )}
@@ -164,7 +175,7 @@ export const NavBar = ({ drawerWidth }) => {
             <Button
               onClick={handleLogout}
               color="error"
-              variant="outlined"
+              variant="contained"
               startIcon={<Logout />}
             >
               Exit

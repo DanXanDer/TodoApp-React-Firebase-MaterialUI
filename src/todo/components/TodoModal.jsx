@@ -55,9 +55,8 @@ const cleanedForm = {
 };
 
 export const TodoModal = () => {
-  
   const [initialForm, setInitialForm] = useState(cleanedForm);
-  
+
   const [saving, setSaving] = useState(false);
 
   const { closeModal, modalOpen } = useUiStore();
@@ -69,10 +68,9 @@ export const TodoModal = () => {
     return todoEdit === null ? "Add new todo" : "Edit todo";
   }, [modalOpen]);
 
-
   useEffect(() => {
     if (todoEdit !== null) {
-      setInitialForm({...todoEdit});
+      setInitialForm({ ...todoEdit });
     }
   }, [modalOpen]);
 
@@ -88,13 +86,16 @@ export const TodoModal = () => {
     handleCheckEmptyForm,
   } = useForm({ initialForm });
 
-  
-
-
   const handleTodoSubmit = async (event) => {
     event.preventDefault();
     if (handleCheckEmptyForm()) {
-      swal("ToDo add failed", "Don't leave empty fields!", "error");
+      swal("Error", "Don't leave empty fields!", "error");
+    } else if (title.length >= 60) {
+      swal(
+        "Title too long",
+        "Todo titles should have less than 60 characters",
+        "error"
+      );
     } else {
       if (todoEdit === null) {
         setSaving(true);

@@ -1,3 +1,5 @@
+import { AccountCircle } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import { Button, Grid, TextField } from "@mui/material";
 import { useMemo, useState } from "react";
 import ReactPasswordChecklist from "react-password-checklist";
@@ -24,6 +26,10 @@ const formErrors = {
 };
 
 export const RegisterPage = () => {
+  const [passwordValid, setPasswordValid] = useState(true);
+
+  const [creating, setCreating] = useState(false);
+
   const {
     displayName,
     email,
@@ -38,14 +44,8 @@ export const RegisterPage = () => {
     handleCheckEmptyForm,
   } = useForm({ initialForm, formErrors });
 
-  const [passwordValid, setPasswordValid] = useState(true);
-
-  const {
-    submitted,
-    startRegisterWithEmailAndPassword,
-    changeSubmitStatus,
-    errorMsg,
-  } = useAuthStore();
+  const { submitted, startRegisterWithEmailAndPassword, changeSubmitStatus } =
+    useAuthStore();
 
   const handleCheckForm = () => {
     setPasswordValid(!passwordValid);
@@ -53,6 +53,7 @@ export const RegisterPage = () => {
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
+    setCreating(true);
     changeSubmitStatus(true);
     if (handleCheckEmptyForm()) {
       swal("Invalid register", "Don't leave empty fields!", "error");
@@ -68,6 +69,7 @@ export const RegisterPage = () => {
         swal("Invalid register", "Email already exists", "error");
       }
     }
+    setCreating(false);
   };
 
   const visiblePasswordCheckList = useMemo(() => {
@@ -139,7 +141,10 @@ export const RegisterPage = () => {
         </Grid>
         <ErrorMessage />
         <Grid container mb={2}>
-          <Button
+          <LoadingButton
+            loadingPosition="start"
+            startIcon={<AccountCircle />}
+            loading={creating}
             type="submit"
             variant="contained"
             fullWidth
@@ -149,7 +154,7 @@ export const RegisterPage = () => {
             }}
           >
             Create account
-          </Button>
+          </LoadingButton>
         </Grid>
       </form>
     </AuthLayout>

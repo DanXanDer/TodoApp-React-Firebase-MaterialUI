@@ -21,7 +21,7 @@ export const SideBarList = () => {
           return (
             <div key={todo.id}>
               <SideBarItem todo={todo} />
-              <Divider sx={{ backgroundColor: "info.dark" }} />
+              <Divider sx={{ backgroundColor: "secondary.main" }} />
             </div>
           );
         })}

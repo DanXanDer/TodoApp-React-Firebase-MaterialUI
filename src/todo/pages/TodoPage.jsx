@@ -12,7 +12,8 @@ export const TodoPage = () => {
   const { navbarHeight } = useUiStore();
 
   const excessHeight = useMemo(() => {
-    return navbarHeight + 80 + "px";
+    // 32 = 2 * 16
+    return navbarHeight + 32 + "px";
   }, [navbarHeight]);
 
   return (
@@ -23,7 +24,7 @@ export const TodoPage = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 5,
+          p: 2,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >

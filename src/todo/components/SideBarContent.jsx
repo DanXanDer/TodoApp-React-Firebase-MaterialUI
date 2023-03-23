@@ -58,8 +58,8 @@ export const SideBarContent = () => {
         <ListItemButton>
           <Button
             onClick={handleOpenModal}
-            fullWidth
-            variant="outlined"
+            sx={{width: "90%"}}
+            variant="contained"
             color="info"
             startIcon={<Add />}
           >
@@ -73,7 +73,7 @@ export const SideBarContent = () => {
         showAllTitle="Show all todos"
         handleClose={handleClose}
       />
-      <Divider sx={{ backgroundColor: "info.dark" }} />
+      <Divider sx={{ backgroundColor: "primary.dark" }} />
       {todosStatus === "noEmpty" ? (
         <SideBarList />
       ) : (

@@ -8,7 +8,7 @@ export const NothingSelectedView = ({ excessHeight }) => {
       <Grid
         container
         sx={{
-          backgroundColor: "primary.main",
+          backgroundColor: "primary.dark",
           borderRadius: 5,
           p: 3,
           minHeight: `calc(100vh - ${excessHeight})`,

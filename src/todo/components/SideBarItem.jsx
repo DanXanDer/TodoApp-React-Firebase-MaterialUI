@@ -85,14 +85,12 @@ export const SideBarItem = ({ todo }) => {
                   sx={{
                     color: "secondary.main",
                     fontWeight: "bold",
-                    overflowWrap: "break-word",
+                    wordBreak: "break-word",
                     maxLines: 2,
                     mb: 1,
                   }}
                 >
-                  {todo.title.length >= 40
-                    ? todo.title.slice(0, 40) + "..."
-                    : todo.title}
+                  {todo.title}
                 </Typography>
               </>
             }

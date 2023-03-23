@@ -1,5 +1,7 @@
-import { Google } from "@mui/icons-material";
+import { Google, Login } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import { Button, Divider, Grid, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import { useAuthStore, useForm } from "../../hooks";
 import { PasswordInput } from "../components";
 import { AuthLayout } from "../Layout";
@@ -10,6 +12,8 @@ const initialForm = {
 };
 
 export const LoginPage = () => {
+  const [login, setLoging] = useState(false);
+
   const {
     email,
     password,
@@ -27,7 +31,7 @@ export const LoginPage = () => {
 
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
-    let isFormEmpty = false;
+    setLoging(true);
     changeSubmitStatus(true);
 
     if (handleCheckEmptyForm()) {
@@ -42,6 +46,7 @@ export const LoginPage = () => {
         );
       }
     }
+    setLoging(false);
   };
 
   const handleLoginWithGoogle = async () => {
@@ -72,8 +77,10 @@ export const LoginPage = () => {
             />
           </Grid>
           <Grid item xs={12} mb={2}>
-            <Button
-              disabled={checkingForm}
+            <LoadingButton
+              loadingPosition="start"
+              startIcon={<Login />}
+              loading={login}
               type="submit"
               variant="contained"
               fullWidth
@@ -83,7 +90,7 @@ export const LoginPage = () => {
               }}
             >
               Login
-            </Button>
+            </LoadingButton>
           </Grid>
         </Grid>
       </form>
