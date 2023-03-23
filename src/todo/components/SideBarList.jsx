@@ -1,18 +1,9 @@
 import { Divider, List } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTodoStore } from "../../hooks";
 import { SideBarItem } from "./SideBarItem";
 
-export const SideBarList = () => {
-  const { todos, filterTodoValue } = useTodoStore();
-
-  const displayedTodos = useMemo(() => {
-    if (!!filterTodoValue) {
-      return todos.filter((todo) => todo.priority === filterTodoValue);
-    } else {
-      return todos;
-    }
-  }, [todos, filterTodoValue]);
+export const SideBarList = ({ displayedTodos }) => {
 
   return (
     <div>

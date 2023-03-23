@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const todoSlice = createSlice({
   name: "todoSlice",
   initialState: {
+    completedFirstLoad: false,
     todos: [],
     filterTodoValue: undefined,
     filterTaskValue: undefined,
@@ -110,6 +111,9 @@ export const todoSlice = createSlice({
     onSetFilterTaskValue: (state, action) => {
       state.filterTaskValue = action.payload;
     },
+    onsetCompletedFirstLoad: (state) => {
+      state.completedFirstLoad = true;
+    },
   },
 });
 
@@ -128,4 +132,5 @@ export const {
   onSetTodosStatus,
   onCompleteTodoTask,
   onSetFilterTaskValue,
+  onsetCompletedFirstLoad,
 } = todoSlice.actions;

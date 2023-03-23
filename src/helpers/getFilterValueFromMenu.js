@@ -1,4 +1,4 @@
-export const getFilterValue = (event, filterOptions) => {
+export const getFilterValueFromMenu = (event, filterOptions) => {
   const filterSelected = filterOptions.some(
     (filter) => filter === event.currentTarget.innerText
   );

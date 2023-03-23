@@ -6,7 +6,6 @@ import {
   doc,
   getDocs,
   updateDoc,
-  getDoc,
 } from "firebase/firestore/lite";
 import { FireBaseDB } from "../firebase/config";
 import {
@@ -24,14 +23,22 @@ import {
   onDeleteTodoTasks,
   onCompleteTodoTask,
   onSetFilterTaskValue,
+  onsetCompletedFirstLoad,
 } from "../store/todo/todoSlice";
 import { useAuthStore } from "./useAuthStore";
 
 export const useTodoStore = () => {
   const { user } = useAuthStore();
 
-  const { todos, todoEdit, activeTodo, todosStatus, filterTodoValue, filterTaskValue } =
-    useSelector((state) => state.todoSlice);
+  const {
+    todos,
+    todoEdit,
+    activeTodo,
+    todosStatus,
+    filterTodoValue,
+    filterTaskValue,
+    completedFirstLoad,
+  } = useSelector((state) => state.todoSlice);
 
   const dispatch = useDispatch();
 
@@ -269,6 +276,10 @@ export const useTodoStore = () => {
     dispatch(onSetTodosStatus(status));
   };
 
+  const setCompletedFirstLoad = () => {
+    dispatch(onsetCompletedFirstLoad());
+  };
+
   return {
     //Properties
     activeTodo,
@@ -278,6 +289,7 @@ export const useTodoStore = () => {
     todos,
     todosStatus,
     user,
+    completedFirstLoad,
 
     //Methods
     deleteAllTodos,
@@ -293,6 +305,7 @@ export const useTodoStore = () => {
     startEditTodo,
     startLoadingTodos,
     startLoadingTodoTasks,
-    setFilterTaskValue
+    setFilterTaskValue,
+    setCompletedFirstLoad,
   };
 };

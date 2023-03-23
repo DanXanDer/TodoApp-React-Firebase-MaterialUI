@@ -1,5 +1,5 @@
-import { AddCircle, StarBorderPurple500 } from "@mui/icons-material";
-import { Grid, IconButton, Toolbar, Typography } from "@mui/material";
+import { ListAlt } from "@mui/icons-material";
+import { Grid, Toolbar, Typography } from "@mui/material";
 
 export const NothingSelectedView = ({ excessHeight }) => {
   return (
@@ -24,7 +24,7 @@ export const NothingSelectedView = ({ excessHeight }) => {
           }}
         >
           <Grid item>
-            <StarBorderPurple500 sx={{ fontSize: "100px" }} />
+            <ListAlt sx={{ fontSize: "100px" }} />
           </Grid>
           <Grid item>
             <Typography variant="h5">Select or add a new todo</Typography>

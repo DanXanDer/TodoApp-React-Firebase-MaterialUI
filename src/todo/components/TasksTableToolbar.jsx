@@ -2,7 +2,7 @@ import { Delete, DoneOutline, FilterList } from "@mui/icons-material";
 import { alpha, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import swal from "sweetalert";
-import { getFilterValue } from "../../helpers/getFilterValue";
+import { getFilterValueFromMenu } from "../../helpers/getFilterValueFromMenu";
 import { useTodoStore } from "../../hooks/useTodoStore";
 import { FilterMenu } from "./FilterMenu";
 
@@ -19,7 +19,7 @@ export const TasksTableToolbar = ({ numSelected, selected }) => {
     useTodoStore();
 
   const handleClose = (event) => {
-    const { filterValue } = getFilterValue(event, tasksStatus);
+    const { filterValue } = getFilterValueFromMenu(event, tasksStatus);
     setFilterTaskValue(filterValue);
     setAnchorEl(null);
   };

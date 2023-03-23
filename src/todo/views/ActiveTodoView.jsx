@@ -119,7 +119,7 @@ export const ActiveTodoView = ({ excessHeight }) => {
             </Grid>
           </form>
         </Grid>
-        <Grid container sx={{ justifyContent: "space-between" }}>
+        <Grid container sx={{ justifyContent: "space-between", gap: 1 }}>
           <Grid item>
             <Typography
               sx={{ overflowWrap: "anywhere", fontWeight: "bolder" }}
@@ -129,10 +129,10 @@ export const ActiveTodoView = ({ excessHeight }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container sx={{ alignItems: "center", gap: 1 }}>
+            <Grid container sx={{ alignItems: "center", gap: 0.5 }}>
               <CalendarMonth />
-              <Typography variant="h6" sx={{ color: "primary.main" }}>
-                Fecha: {stringifiedStartDate} - {stringifiedEndDate}
+              <Typography  sx={{ color: "primary.light" }}>
+                Date: {stringifiedStartDate} - {stringifiedEndDate}
               </Typography>
             </Grid>
           </Grid>

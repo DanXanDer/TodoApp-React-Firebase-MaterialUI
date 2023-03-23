@@ -166,7 +166,6 @@ export const NavBar = ({ drawerWidth }) => {
                   placeholder="Search todo"
                 />
               </Search>
-              // <TextField variant="outlined" sx={{backgroundColor: "secondary.main"}} {...params} label="With categories" />
             )}
           />
 

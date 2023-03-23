@@ -12,6 +12,8 @@ export const useCheckAuth = () => {
 
   const { status } = useSelector((state) => state.authSlice);
 
+  const { setCompletedFirstLoad } = useTodoStore();
+
   const {
     todos,
     startLoadingTodoTasks,
@@ -33,6 +35,7 @@ export const useCheckAuth = () => {
         } else {
           setTodosStatus("empty");
         }
+        setCompletedFirstLoad();
       }
     };
     fetchTasks();
