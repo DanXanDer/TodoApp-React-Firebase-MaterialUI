@@ -23,5 +23,9 @@ export const uiSlice = createSlice({
   },
 });
 
-export const { onChangeMobileOpenStatus, onChangeNavbarHeight, onCloseModal, onOpenModal } =
-  uiSlice.actions;
+export const {
+  onChangeMobileOpenStatus,
+  onChangeNavbarHeight,
+  onCloseModal,
+  onOpenModal,
+} = uiSlice.actions;

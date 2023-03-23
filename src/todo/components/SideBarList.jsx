@@ -4,15 +4,15 @@ import { useTodoStore } from "../../hooks";
 import { SideBarItem } from "./SideBarItem";
 
 export const SideBarList = () => {
-  const { todos, filterValue } = useTodoStore();
+  const { todos, filterTodoValue } = useTodoStore();
 
   const displayedTodos = useMemo(() => {
-    if (filterValue) {
-      return todos.filter((todo) => todo.priority === filterValue);
+    if (!!filterTodoValue) {
+      return todos.filter((todo) => todo.priority === filterTodoValue);
     } else {
       return todos;
     }
-  }, [todos, filterValue]);
+  }, [todos, filterTodoValue]);
 
   return (
     <div>

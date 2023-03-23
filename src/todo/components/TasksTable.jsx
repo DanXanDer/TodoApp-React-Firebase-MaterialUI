@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { TasksTableHead, TasksTableToolbar } from "./";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTodoStore } from "../../hooks";
 import { Tooltip } from "@mui/material";
 
@@ -17,9 +17,22 @@ export const TasksTable = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { activeTodo, startCompleteTodoTasks } = useTodoStore();
+  const { activeTodo, filterTaskValue, startCompleteTodoTasks } =
+    useTodoStore();
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
+
+  const displayedTasks = useMemo(() => {
+    if (!!filterTaskValue) {
+      const filterTaskValueBool =
+        filterTaskValue === "Completed" ? true : false;
+      return activeTodo.tasks.filter(
+        (task) => task.completed === filterTaskValueBool
+      );
+    } else {
+      return activeTodo.tasks;
+    }
+  }, [filterTaskValue, activeTodo.tasks]);
 
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
@@ -47,7 +60,7 @@ export const TasksTable = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = activeTodo.tasks.map((n) => n.id);
+      const newSelected = displayedTasks.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -70,7 +83,7 @@ export const TasksTable = () => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - activeTodo.tasks.length)
+      ? Math.max(0, (1 + page) * rowsPerPage - displayedTasks.length)
       : 0;
 
   return (
@@ -90,11 +103,11 @@ export const TasksTable = () => {
             <TasksTableHead
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
-              rowCount={activeTodo.tasks.length}
+              rowCount={displayedTasks.length}
             />
 
             <TableBody>
-              {activeTodo.tasks
+              {displayedTasks
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((taskRow, index) => {
                   const isItemSelected = isSelected(taskRow.id);
@@ -122,7 +135,11 @@ export const TasksTable = () => {
                       <Tooltip
                         followCursor
                         arrow
-                        title={taskRow.completed === true ? "Task completed" : "Task incompleted"}
+                        title={
+                          taskRow.completed === true
+                            ? "Click to mark as incompleted"
+                            : "Click to mark as completed"
+                        }
                       >
                         <TableCell
                           onClick={(event) =>
@@ -159,7 +176,7 @@ export const TasksTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={activeTodo.tasks.length}
+          count={displayedTasks.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

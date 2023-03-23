@@ -1,10 +1,28 @@
-import { Delete, DoneOutline } from "@mui/icons-material";
+import { Delete, DoneOutline, FilterList } from "@mui/icons-material";
 import { alpha, IconButton, Toolbar, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
 import swal from "sweetalert";
+import { getFilterValue } from "../../helpers/getFilterValue";
 import { useTodoStore } from "../../hooks/useTodoStore";
+import { FilterMenu } from "./FilterMenu";
+
+const tasksStatus = ["Completed", "Incompleted"];
 
 export const TasksTableToolbar = ({ numSelected, selected }) => {
-  const { startDeletingTodoTasks,/*  startCompleteTodoTasks */ } = useTodoStore();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const { filterTaskValue, startDeletingTodoTasks, setFilterTaskValue } =
+    useTodoStore();
+
+  const handleClose = (event) => {
+    const { filterValue } = getFilterValue(event, tasksStatus);
+    setFilterTaskValue(filterValue);
+    setAnchorEl(null);
+  };
 
   const handleDeleteTodoTasks = async () => {
     const willDelete = await swal({
@@ -23,10 +41,6 @@ export const TasksTableToolbar = ({ numSelected, selected }) => {
       }
     }
   };
-
-  // const handleCompleteTodoTasks = async () => {
-  //   await startCompleteTodoTasks(selected);
-  // };
 
   return (
     <Toolbar
@@ -58,7 +72,9 @@ export const TasksTableToolbar = ({ numSelected, selected }) => {
           id="tableTitle"
           component="div"
         >
-          Task list
+          {!!filterTaskValue
+            ? `${filterTaskValue} tasks`
+            : `All tasks`}
         </Typography>
       )}
 
@@ -69,13 +85,22 @@ export const TasksTableToolbar = ({ numSelected, selected }) => {
               <Delete />
             </IconButton>
           </Tooltip>
-          {/* <Tooltip title="Mark as completed">
-            <IconButton onClick={handleCompleteTodoTasks}>
-              <DoneOutline />
-            </IconButton>
-          </Tooltip> */}
         </>
-      ) : null}
+      ) : (
+        <>
+          <Tooltip title="Filter list">
+            <IconButton onClick={handleMenu}>
+              <FilterList />
+            </IconButton>
+          </Tooltip>
+          <FilterMenu
+            filterOptions={tasksStatus}
+            anchorEl={anchorEl}
+            showAllTitle="Show all tasks"
+            handleClose={handleClose}
+          />
+        </>
+      )}
     </Toolbar>
   );
 };

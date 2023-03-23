@@ -20,7 +20,8 @@ import { useTodoStore, useUiStore } from "../../hooks";
 export const SideBarItem = ({ todo }) => {
   const { openModal, changeMobileOpenStatus, mobileOpen } = useUiStore();
 
-  const { activeTodo, setActiveTodo, setEditTodo } = useTodoStore();
+  const { activeTodo, setFilterTaskValue, setActiveTodo, setEditTodo } =
+    useTodoStore();
 
   const handleOpenModal = () => {
     openModal();
@@ -47,6 +48,7 @@ export const SideBarItem = ({ todo }) => {
 
   const handleSelectActiveTodo = () => {
     //TODO: Modificar para que cargue desde los arrays locales luego de que se haya cargado las tareas por primera vez desde la BD
+    setFilterTaskValue();
     setActiveTodo(todo);
     changeMobileOpenStatus(!mobileOpen);
   };

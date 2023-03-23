@@ -2,17 +2,20 @@ import { Logout, Menu, MenuOpen, SearchOutlined } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
   AppBar,
+  Autocomplete,
   Box,
   Button,
+  Grid,
   IconButton,
   InputBase,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { useEffect, useMemo, useRef } from "react";
 import swal from "sweetalert";
-import { useAuthStore, useUiStore } from "../../hooks";
+import { useAuthStore, useTodoStore, useUiStore } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -66,6 +69,8 @@ export const NavBar = ({ drawerWidth }) => {
 
   const { startLogout, displayName } = useAuthStore();
 
+  const { todos } = useTodoStore();
+
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -81,6 +86,13 @@ export const NavBar = ({ drawerWidth }) => {
       window.removeEventListener("resize", actualizeNavHeight);
     };
   }, []);
+
+  const todoPriority = todos.map((todo) => {
+    return {
+      priority: todo.priority,
+      ...todo,
+    };
+  });
 
   const handleDrawerToggle = () => {
     changeMobileOpenStatus(!mobileOpen);
@@ -126,15 +138,27 @@ export const NavBar = ({ drawerWidth }) => {
           >
             {displayName}
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchOutlined />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          <Autocomplete
+            id="grouped-demo"
+            options={todoPriority.sort((a, b) =>
+              a.priority.localeCompare(b.priority)
+            )}
+            groupBy={(option) => option.priority}
+            getOptionLabel={(option) => option.title}
+            sx={{ width: "100%" }}
+            renderInput={(params) => (
+              <Search ref={params.InputProps.ref}>
+                <SearchIconWrapper>
+                  <SearchOutlined />
+                </SearchIconWrapper>
+                <StyledInputBase 
+                inputProps={params.inputProps}
+                placeholder="Search…"/>
+              </Search>
+              // <TextField variant="outlined" sx={{backgroundColor: "secondary.main"}} {...params} label="With categories" />
+            )}
+          />
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "flex" } }}>
             <Button

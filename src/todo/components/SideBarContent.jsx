@@ -12,7 +12,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { getFilterValue } from "../../helpers/getFilterValue";
 import { useTodoStore, useUiStore } from "../../hooks";
+import { FilterMenu } from "./FilterMenu";
 import { SideBarList } from "./SideBarList";
 
 const todosPriorities = ["Normal", "Important", "Urgent"];
@@ -20,7 +22,7 @@ const todosPriorities = ["Normal", "Important", "Urgent"];
 export const SideBarContent = () => {
   const { navbarHeight, openModal } = useUiStore();
 
-  const { todosStatus, setFilterValue } = useTodoStore();
+  const { todosStatus, setfilterTodoValue } = useTodoStore();
 
   const handleOpenModal = () => {
     openModal();
@@ -33,14 +35,8 @@ export const SideBarContent = () => {
   };
 
   const handleClose = (event) => {
-    const filterSelected = todosPriorities.some(
-      (priority) => priority === event.currentTarget.innerText
-    );
-    let filterValue = undefined;
-    if (filterSelected === true) {
-      filterValue = event.currentTarget.innerText;
-    } 
-    setFilterValue(filterValue);
+    const { filterValue } = getFilterValue(event, todosPriorities);
+    setfilterTodoValue(filterValue);
     setAnchorEl(null);
   };
 
@@ -71,33 +67,12 @@ export const SideBarContent = () => {
           </Button>
         </ListItemButton>
       </ListItem>
-      <Menu
-        id="menu-appbar"
+      <FilterMenu
+        filterOptions={todosPriorities}
         anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem divider onClick={handleClose}>
-          Show all todos
-        </MenuItem>
-        {todosPriorities.map((priority) => {
-          return (
-            <MenuItem key={priority} onClick={handleClose}>
-              {priority}
-            </MenuItem>
-          );
-        })}
-      </Menu>
-
+        showAllTitle="Show all todos"
+        handleClose={handleClose}
+      />
       <Divider sx={{ backgroundColor: "info.dark" }} />
       {todosStatus === "noEmpty" ? (
         <SideBarList />

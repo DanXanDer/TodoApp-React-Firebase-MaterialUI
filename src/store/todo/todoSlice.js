@@ -1,25 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// const dummyTodo = {
-//   id: "",
-//   title: "",
-//   startDate: "",
-//   endDate: "",
-//   tasks: [
-//     {
-//       id: "",
-//       taskDesc: "",
-//       completed: false,
-//     },
-//   ],
-//  priority,
-// };
-
 export const todoSlice = createSlice({
   name: "todoSlice",
   initialState: {
     todos: [],
-    filterValue: undefined,
+    filterTodoValue: undefined,
+    filterTaskValue: undefined,
     activeTodo: null,
     todoEdit: null,
     todosStatus: "loading", // loading, empty or noEmpty
@@ -69,8 +55,8 @@ export const todoSlice = createSlice({
     onSetEditTodo: (state, action) => {
       state.todoEdit = action.payload;
     },
-    onSetFilterValue: (state, action) => {
-      state.filterValue = action.payload;
+    onSetfilterTodoValue: (state, action) => {
+      state.filterTodoValue = action.payload;
     },
     onAddNewTask: (state, action) => {
       state.todos = state.todos.map((todo) => {
@@ -121,6 +107,9 @@ export const todoSlice = createSlice({
     onSetTodosStatus: (state, action) => {
       state.todosStatus = action.payload; //empty noEmpty loading
     },
+    onSetFilterTaskValue: (state, action) => {
+      state.filterTaskValue = action.payload;
+    },
   },
 });
 
@@ -131,11 +120,12 @@ export const {
   onDeleteTodoTasks,
   onDeleteTodo,
   onEditTodo,
-  onSetFilterValue,
+  onSetfilterTodoValue,
   onLoadTasks,
   onLoadTodos,
   onSetActiveTodo,
   onSetEditTodo,
   onSetTodosStatus,
   onCompleteTodoTask,
+  onSetFilterTaskValue,
 } = todoSlice.actions;

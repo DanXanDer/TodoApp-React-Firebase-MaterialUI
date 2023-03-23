@@ -7,3 +7,4 @@ export * from "./TasksTableToolbar";
 export * from "./TasksTableHead";
 export * from "./TasksTable";
 export * from "./SideBarContent"
+export * from "./FilterMenu"
